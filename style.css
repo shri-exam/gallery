@@ -18,5 +18,5 @@ body,html {
     color: red;
     overflow-x: scroll;
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
 }

@@ -65,6 +65,7 @@
                 hovergallery=false;
                 $(this).animate({opacity:0},300);
             });
+        alert($(window).height());
         //getAllAlbumImages();
         /* ########################## */
     });

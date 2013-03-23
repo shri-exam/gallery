@@ -8,6 +8,7 @@
         var images = []; /* Массив для картинок */
         var imgId = []; /* массив где хранятся только id картинок */
         var next = 1; /* адрес следующей страницы пагинации */
+        var hovergallery = false;
 
 
         function l(l){console.log(l);}
@@ -47,12 +48,23 @@
             }
         }
         $(window).scroll(function(){
-            console.log($(window).scrollTop());
-            if ($(window).scrollTop() < 100 ) {$('.gallery').scrollLeft($('.gallery').scrollLeft()-(100-$(window).scrollTop()));}
-            else {$('.gallery').scrollLeft($('.gallery').scrollLeft()+($(window).scrollTop()-100));}
-            $(window).scrollTop(100);
+            if (hovergallery)
+            {
+                var windowscrolltop = $(window).scrollTop();
+                var galleryscrollleft = $('.gallery').scrollLeft();
+                if (windowscrolltop<100 ) {$('.gallery').scrollLeft(galleryscrollleft-(100-windowscrolltop));}
+                else {$('.gallery').scrollLeft(galleryscrollleft+(windowscrolltop-100));}
+                $(window).scrollTop(100);
+            }
         });
-
+        $('.gallery').hover(function(){
+                $(this).animate({opacity:1},300);
+                hovergallery=true;
+            },
+            function(){
+                hovergallery=false;
+                $(this).animate({opacity:0},300);
+            });
         //getAllAlbumImages();
         /* ########################## */
     });

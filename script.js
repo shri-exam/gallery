@@ -199,14 +199,14 @@
     /* функция горизонтального скрола */
     function scrolling()
     {
-        $(window).bind('touchmove',function(){ loadScroll();alert('move touch'); });
-            /*.scroll(function(){
+        $(window)
+            .scroll(function(){
                 console.log('WINDOWS SCROLLING');
                 loadScroll();
                 $(window).scrollTop(100);
             }).bind('touchmove',function(){ loadScroll(); });
 
-        $('.gallery').scroll(function(){console.log('GALLERY SCROLLING ');loadScroll();});  */
+        $('.gallery').scroll(function(){console.log('GALLERY SCROLLING ');loadScroll();});
     }
     /* после загрузки страницы */
     $(function(){

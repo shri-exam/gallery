@@ -1,22 +1,31 @@
 body,html {
     height: 150%;
-    width: 99%;
     background: #000;
+    overflow-x: hidden;
 }
 body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
+.gallery::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
 .main {
+    height: 99%;
     margin: 0 auto;
-    border: 1px solid #fff;
+    border: 3px solid #fff;
     width: 100%;
-    height: 100%;
     position: fixed;
+
 }
 .gallery {
     width: 100%;
-    height: 100px;
+    height: 120px;
     border: 2px solid red;
     color: red;
     overflow-x: scroll;
     position: absolute;
     bottom: 10px;
+}
+.gallery img {
+    display: table-cell;
+    height: 100px;
+    margin-right: 5px;
+    border: 1px solid #fff;
+    cursor:pointer;
 }

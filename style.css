@@ -14,7 +14,7 @@ body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
 
 }
 .gallery {
-    width: 100%;
+    width: 99%;
     height: 120px;
     border: 2px solid red;
     color: red;
@@ -29,4 +29,13 @@ body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
     border: 1px solid #fff;
     cursor:pointer;
     opacity: 0;
+}
+.loading {
+    display: table-cell;
+    background-color: #fff;
+    background-image: url('loading.gif');
+    height:100px;
+    width:100px;
+    background-position: center center;
+    background-repeat: no-repeat;
 }

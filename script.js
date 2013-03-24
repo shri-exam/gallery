@@ -129,7 +129,7 @@
                                 else
                                 {
                                     $(insertTd).prependTo('.row').find('img').animate({opacity:1},300);
-                                    $('.gallery').scrollLeft(count*120);
+                                    /*$('.gallery').scrollLeft(count*120);   */
                                 }
                                 $('.loading').remove();
                                 /* привязываем обработчики обратно */

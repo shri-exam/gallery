@@ -9,6 +9,7 @@
     var hovergallery = false;
     var beginId = "175189";
     var loadImages = $.Deferred();
+    var blockLoadImages = false;
     var preload=Number(beginId),nextload = true;
     var loading = $('<div/>',{
         class: 'loading'
@@ -27,6 +28,7 @@
     /* ####### end default settings ####### */
     function getAllAlbumImages()
     {
+        $('.row').append(loading);
         if (next)/* если следующих страницы больше нет - выходим из рекурсии */
         {
             if (next == 1) { var url = domen + "/api/users/"+user+"/album/"+album+"/photos/?"+j;}
@@ -86,71 +88,82 @@
     */
     function loadSibImage(id,next)
     {
-        if (id)
+        if (blockLoadImages === false)
         {
-            console.log('id=',id); console.log('next=',next);
-            var indexImg = false;
-            for (i in imgId)
+            blockLoadImages = true;
+            if (id)
             {
-                if (imgId[i].id == id) {indexImg = i;break;}
-            }
+                if (next){ $(loading).appendTo('.row');console.log('ADD END');}
+                else {$(loading).prependTo('.row');console.log('ADD BEGIN');}
 
-            console.log('indexImg=',indexImg);
-            indexImg = Number(indexImg);
-            var count = Math.ceil($(window).width()/150);
-            for (var i=1;i<count;i++)
-            {
-                var newIndexImg = false;
-                if (next)
+                console.log('id=',id); console.log('next=',next);
+                var indexImg = false;
+                for (i in imgId)
                 {
-                    if (nextload == false) {console.log('nextload=false error: 1');return false;}
-                    else {newIndexImg = indexImg+i;}
-                }
-                else
-                {
-                    if (preload == false) {console.log('preload=false error: 2');return false;}
-                    else {newIndexImg = indexImg-i;}
+                    if (imgId[i].id == id) {indexImg = i;break;}
                 }
 
-                /*console.log('newIndexImg=',newIndexImg);     */
-                if (imgId[newIndexImg])
+                console.log('indexImg=',indexImg);
+                indexImg = Number(indexImg);
+                var count = Math.ceil($(window).width()/130);
+                for (var i=1;i<count;i++)
                 {
-                    console.log('loaded = ',newIndexImg,' ',images[imgId[newIndexImg].id]);
-
-                    if (imgId[newIndexImg].load == false)
+                    var newIndexImg = false;
+                    if (next)
                     {
-                        imgId[newIndexImg].load = true;
-
-                        if (next) {nextload = imgId[newIndexImg].id;}
-                        else {preload = imgId[newIndexImg].id;}
-
-                        var insertImg = loadTiles(images[imgId[newIndexImg].id]);
-
-                        if (next){ $(loading).appendTo('.row'); }
-                        else {$(loading).prependTo('.row');}
-
-                        insertImg.then(function(ins){
-                            var insertTd = $('<td/>').append(ins);
-                            if (next) {$(insertTd).appendTo('.row').find('img').animate({opacity:1},300);}
-                            else {$(insertTd).prependTo('.row').find('img').animate({opacity:1},300);}
-                            $('.loading').remove();
-                        });
+                        if (nextload == false) {console.log('nextload=false error: 1');return false;}
+                        else {newIndexImg = indexImg+i;}
                     }
                     else
                     {
-                        /* такого элемента не существует */
-                        console.log(' already loaded = ',imgId[newIndexImg]);
+                        if (preload == false) {console.log('preload=false error: 2');return false;}
+                        else {newIndexImg = indexImg-i;}
+                    }
+
+                    /*console.log('newIndexImg=',newIndexImg);     */
+                    if (imgId[newIndexImg])
+                    {
+                        console.log('loaded = ',newIndexImg,' ',images[imgId[newIndexImg].id]);
+
+                        if (imgId[newIndexImg].load == false)
+                        {
+                            imgId[newIndexImg].load = true;
+
+                            if (next) {nextload = imgId[newIndexImg].id;}
+                            else {preload = imgId[newIndexImg].id;}
+
+                            var insertImg = loadTiles(images[imgId[newIndexImg].id]);
+
+                            insertImg.then(function(ins){
+                                var insertTd = $('<td/>').append(ins);
+                                if (next) {$(insertTd).appendTo('.row').find('img').animate({opacity:1},300);}
+                                else
+                                {
+                                    $(insertTd).prependTo('.row').find('img').animate({opacity:1},300);
+                                    $('.gallery').scrollLeft(count*120);
+                                }
+                                $('.loading').remove();
+                                /* привязываем обработчики обратно */
+                                blockLoadImages = false;
+                            });
+                        }
+                        else
+                        {
+                            /* такого элемента не существует */
+                            console.log(' already loaded = ',imgId[newIndexImg]);
+                        }
+                    }
+                    else
+                    {
+                        /* элемента не существует */
+                        if (next) {nextload = false;} else {preload = false;}
+                        console.log('newIndexImg=',newIndexImg,' error: 3');
+                        blockLoadImages = false;
                     }
                 }
-                else
-                {
-                    /* элемента не существует */
-                    if (next) {nextload = false;} else {preload = false;}
-                    console.log('newIndexImg=',newIndexImg,' error: 3');
-                }
             }
-        }
-        else {console.log('id=',id,' error: 5');}
+            else {console.log('id=',id,' error: 5');blockLoadImages = false;}
+        }  else {console.log('blockLoadImages = ',blockLoadImages,' error: 6');}
     }
     /*
     * @param {object} img
@@ -169,36 +182,36 @@
         $(imageTiles).load(function(){ lT.resolve($(imageTiles)); });
         return lT.promise();
     }
+    function loadScroll(obj)
+    {
+        $window = $(window);
+        if (hovergallery)
+        {
+            var windowscrolltop = $(window).scrollTop();
+            var galleryscrollleft = $('.gallery').scrollLeft();
+            if (windowscrolltop<100 ) {$('.gallery').scrollLeft(galleryscrollleft-(100-windowscrolltop));}
+            else {$('.gallery').scrollLeft(galleryscrollleft+(windowscrolltop-100));}
+
+
+            $gallery = $('.gallery');
+            $table = $('.gallery table');
+            if ($gallery.scrollLeft()>=($table.width()-$gallery.width()))
+            {
+                $window.trigger('scroll-next');
+
+            }
+            else if ($gallery.scrollLeft() == 0)
+            {
+                $window.trigger('scroll-prep');
+            }
+            else {console.log($gallery.scrollLeft(),$table.width(),$gallery.width());}
+        }
+    }
     /* функция горизонтального скрола */
     function scrolling()
     {
-        $window = $(window);
-        $('.gallery').scroll(function(){ $window.trigger('scroll-prep');console.log('gallery scrolling')});
-        $(window,'.gallery').scroll(function(){
-            if (hovergallery)
-            {
-                var windowscrolltop = $(window).scrollTop();
-                var galleryscrollleft = $('.gallery').scrollLeft();
-                if (windowscrolltop<100 ) {$('.gallery').scrollLeft(galleryscrollleft-(100-windowscrolltop)*2);}
-                else {$('.gallery').scrollLeft(galleryscrollleft+(windowscrolltop-100)*2);}
-
-
-                $gallery = $('.gallery');
-                $table = $('.gallery table');
-                if ($gallery.scrollLeft()>=($table.width()-$gallery.width()))
-                {
-                    $window.trigger('scroll-next');
-                }
-                else if ($gallery.scrollLeft() == 0)
-                {
-                    $window.trigger('scroll-prep');
-                }
-                else {console.log($gallery.scrollLeft(),$table.width(),$gallery.width());}
-            }
-            $(window).scrollTop(100);
-        }).trigger('scroll-next').trigger('scroll-prep');
-        $window.bind('scroll-next',function(){console.log('loadiing NEXT');loadSibImage(nextload,true);});
-        $window.bind('scroll-prep',function(){console.log('loadiing PREP');loadSibImage(preload,false);});
+        $(window).scroll(function(){console.log('WINDOWS SCROLLING');loadScroll();$(window).scrollTop(100);});
+        $('.gallery').scroll(function(){console.log('GALLERY SCROLLING ');loadScroll();});
     }
 
     /* после загрузки страницы */
@@ -214,5 +227,8 @@
                 hovergallery=false;
                 $(this).animate({opacity:0},300);
             });
+        $(window)
+            .bind('scroll-next',function(){console.log('loadiing NEXT');loadSibImage(nextload,true);})
+            .bind('scroll-prep',function(){console.log('loadiing PREP');loadSibImage(preload,false);});
     });
 }());

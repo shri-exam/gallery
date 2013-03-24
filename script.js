@@ -114,10 +114,12 @@
             {
                 /* если элемент существует */
                 var insertImg = loadTiles(images[imgId[newIndexImg].id]);
+                insertImg.then(function(ins){
+                    var insertTd = $('<td/>').append(ins);
+                    if (next) {$(insertTd).appendTo('.gallery').find('img').animate({opacity:1},300);}
+                    else {$(insertTd).prependTo('.gallery').find('img').animate({opacity:1},300);}
+                });
             }
-            var insertTd = $('<td/>').append(insertImg);
-            if (next) {$(insertTd).appendTo('.gallery');}
-            else {$(insertTd).prependTo('.gallery');}
         }
     }
     /*
@@ -134,7 +136,8 @@
             src: img.s_link,
             'data-id': img.id
         });
-        return imageTiles;
+        $(imageTiles).load(function(){ lT.resolve($(imageTiles)); });
+        return lT.promise();
     }
     $(function(){
         /*Скачивание всех картинок в массив */

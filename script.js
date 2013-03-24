@@ -11,7 +11,7 @@
     var loadImages = $.Deferred();
     var blockLoadImages = false;
     var preload=Number(beginId),nextload = true;
-    var loading = $('<div/>',{
+    var loading = $('<td/>',{
         class: 'loading'
     });
     function l(l){console.log(l);}
@@ -82,8 +82,9 @@
             blockLoadImages = true;
             if (id)
             {
-                if (next){ $(loading).appendTo('.row');console.log('ADD END');}
-                else {$(loading).prependTo('.row');console.log('ADD BEGIN');}
+                var $row = $('.row');
+                if (next){ $row.append(loading);console.log('ADD END');}
+                else { $row.prepend(loading);console.log('ADD BEGIN');}
 
                 console.log('id=',id); console.log('next=',next);
                 var indexImg = false;
@@ -129,7 +130,7 @@
                                 else
                                 {
                                     $(insertTd).prependTo('.row').find('img').animate({opacity:1},300);
-                                    /*$('.gallery').scrollLeft(count*120);   */
+                                    $('.gallery').scrollLeft(count*120);
                                 }
                                 $('.loading').remove();
                                 /* привязываем обработчики обратно */
@@ -198,8 +199,14 @@
     /* функция горизонтального скрола */
     function scrolling()
     {
-        $(window).scroll(function(){console.log('WINDOWS SCROLLING');loadScroll();$(window).scrollTop(100);});
-        $('.gallery').scroll(function(){console.log('GALLERY SCROLLING ');loadScroll();});
+        $(window).bind('touchmove',function(){ loadScroll();alert('move touch'); });
+            /*.scroll(function(){
+                console.log('WINDOWS SCROLLING');
+                loadScroll();
+                $(window).scrollTop(100);
+            }).bind('touchmove',function(){ loadScroll(); });
+
+        $('.gallery').scroll(function(){console.log('GALLERY SCROLLING ');loadScroll();});  */
     }
     /* после загрузки страницы */
     $(function(){

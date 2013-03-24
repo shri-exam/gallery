@@ -14,16 +14,6 @@
     var loading = $('<div/>',{
         class: 'loading'
     });
-    var styleSheet = {
-        lightbox: {
-            'display': 'none',
-            'position': 'fixed',
-            'top': '50%',
-            'left': '50%',
-            'margin': null,
-            'outline': '9999px solid rgba(0,0,0,0.5)'
-        }
-    }
     function l(l){console.log(l);}
     /* ####### end default settings ####### */
     function getAllAlbumImages()
@@ -72,15 +62,14 @@
     */
     function resizeImage(img)
     {
-        var windowheight = $(window).height();
-        var windowwidth = $(window).width();
-        if ($(img).height() >= windowheight) {$(img).height(windowheight-10);}
-        if ($(img).width() >= windowwidth) {$(img).width(windowwidth-10);}
+        var reqheight = $(window).height()-20;
+        var reqwidth = $(window).width()-20;
+        $(img).height(reqheight);
+        if ($(img).width()>= reqwidth) {$(img).width(reqwidth);}
         $(img).css({
             'margin-left': $(img).width() / -2,
             'margin-top': $(img).height() / -2
         });
-        $(img).fadeIn();
     }
     /*
     * @param {string} id, {boolean} next
@@ -198,7 +187,6 @@
             if ($gallery.scrollLeft()>=($table.width()-$gallery.width()))
             {
                 $window.trigger('scroll-next');
-
             }
             else if ($gallery.scrollLeft() == 0)
             {
@@ -213,22 +201,40 @@
         $(window).scroll(function(){console.log('WINDOWS SCROLLING');loadScroll();$(window).scrollTop(100);});
         $('.gallery').scroll(function(){console.log('GALLERY SCROLLING ');loadScroll();});
     }
-
     /* после загрузки страницы */
     $(function(){
         /*Скачивание всех картинок в массив */
+        $window = $(window);
         getAllAlbumImages();
         scrolling();
         $('.gallery').hover(function(){
-                $(this).animate({opacity:1},300);
                 hovergallery=true;
             },
             function(){
                 hovergallery=false;
-                $(this).animate({opacity:0},300);
+                $(this).slideUp(400);
             });
-        $(window)
+        $window
             .bind('scroll-next',function(){console.log('loadiing NEXT');loadSibImage(nextload,true);})
-            .bind('scroll-prep',function(){console.log('loadiing PREP');loadSibImage(preload,false);});
+            .bind('scroll-prep',function(){console.log('loadiing PREP');loadSibImage(preload,false);})
+            .resize(function(){resizeImage($('.lightbox').eq(0));});
+
+        $('.row').delegate('td img','click',function(){
+            $('.lightbox').remove();
+            var img = images[($(this).attr('data-id'))];
+            var lightbox =  $('<img/>',{
+                src: img.l_link,
+                class: 'lightbox'
+            }).appendTo('.main').load(function(){
+                    resizeImage($(this));
+                    $(this).animate({opacity:1},300);
+                });
+        });
+        $('.main').delegate('.lightbox','click',function(){
+            $('.lightbox').remove();
+        });
+        $('.hovergallery').hover(function(){
+            $('.gallery').slideDown(400);
+        });
     });
 }());

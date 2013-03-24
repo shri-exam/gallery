@@ -172,8 +172,8 @@
     /* функция горизонтального скрола */
     function scrolling()
     {
-       // $('.gallery').scroll(function(){ console.log('gallery scrolling')});
         $window = $(window);
+        $('.gallery').scroll(function(){ $window.trigger('scroll-prep');console.log('gallery scrolling')});
         $(window,'.gallery').scroll(function(){
             if (hovergallery)
             {

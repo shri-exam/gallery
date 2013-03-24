@@ -4,7 +4,7 @@ body,html {
     overflow-x: hidden;
 }
 body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
-.gallery::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
+/*.gallery::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}    */
 .main {
     height: 99%;
     margin: 0 auto;

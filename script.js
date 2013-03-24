@@ -62,10 +62,36 @@
     */
     function resizeImage(img)
     {
+        var dataImg = images[$(img).attr('data-id')];
+        /*console.log($(img).attr('data-id'));
+        console.log(dataImg);  */
         var reqheight = $(window).height()-20;
         var reqwidth = $(window).width()-20;
-        $(img).height(reqheight);
-        if ($(img).width()>= reqwidth) {$(img).width(reqwidth);}
+        console.log('reqH=',reqheight,' reqW=',reqwidth);
+
+        if (dataImg.height<reqheight && dataImg.width<reqwidth)
+        {
+            $(img).height(dataImg.height);
+            $(img).width(dataImg.width);
+        }
+        else
+        {
+            var tempHeight = $(img).height();
+            console.log('tempHeight=',tempHeight);
+            var tempWidth = $(img).width();
+            console.log('tempWidth=',tempWidth);
+            if (reqheight<reqwidth)
+            {
+                $(img).height(reqheight);
+                $(img).width(tempWidth*reqheight/tempHeight);
+            }
+            else
+            {
+                console.log('OPA');
+                $(img).width(reqwidth);
+                $(img).height(tempHeight*reqwidth/tempWidth);
+            }
+        }
         $(img).css({
             'margin-left': $(img).width() / -2,
             'margin-top': $(img).height() / -2
@@ -185,7 +211,7 @@
 
             $gallery = $('.gallery');
             $table = $('.gallery table');
-            if ($gallery.scrollLeft()>=($table.width()-$gallery.width()))
+            if ($gallery.scrollLeft()>=($table.width()-$gallery.width()-10))
             {
                 $window.trigger('scroll-next');
             }
@@ -193,7 +219,9 @@
             {
                 $window.trigger('scroll-prep');
             }
-            else {console.log($gallery.scrollLeft(),$table.width(),$gallery.width());}
+            else {console.log('gallery.scrollLeft=',$gallery.scrollLeft(),
+                ' table.width=',$table.width(),
+                ' gallery.width=',$gallery.width());}
         }
     }
     /* функция горизонтального скрола */
@@ -231,7 +259,8 @@
             var img = images[($(this).attr('data-id'))];
             var lightbox =  $('<img/>',{
                 src: img.l_link,
-                class: 'lightbox'
+                class: 'lightbox',
+                'data-id': img.id
             }).appendTo('.main').load(function(){
                     resizeImage($(this));
                     $(this).animate({opacity:1},300);

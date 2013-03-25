@@ -94,7 +94,7 @@
         }
         $(img).css({
             'margin-left': $(img).width() / -2,
-            'margin-top': $(img).height() / -4
+            'margin-top': $(img).height() / -2
         });
     }
     /*
@@ -293,13 +293,14 @@
         $('body').bind('touchmove',function(){
             /* меняем интерфейс на тачкриновский */
             /* отсвязываем события прокрутки */
+            touch_e = $('.gallery').height()*2;
             $('.gallery').trigger('btn-replace');
             hovergallery=true;
             $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');
             $('.hovergallery').remove();
         });
         $gallery.bind('btn-replace',function(){
-                touch_e = $('.gallery').height();
+
                 $('.btn').remove();
                 $('.row').prepend('<td class="btn btn_prep"></td>').append('<td class="btn btn_next"></td>');
         });

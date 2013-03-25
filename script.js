@@ -291,9 +291,9 @@
             alert('touch');
             /* меняем интерфейс на тачкриновский */
             /* отсвязываем события прокрутки */
-            if (touch === false ) {$gallery.trigger('btn-replace');}
+            if (touch === false ) {touch = true;('.gallery').trigger('btn-replace');}
             hovergallery=true;
-            touch = true;
+
             $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');
             $('.hovergallery').remove();
         });

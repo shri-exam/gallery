@@ -18,6 +18,7 @@
 
     function getAllAlbumImages()
     {
+        blockLoadImages = true;
         $('.row').append(loading);
         if (next)/* если следующих страницы больше нет - выходим из рекурсии */
         {
@@ -50,6 +51,7 @@
         }
     }
     loadImages.done(function(){
+            blockLoadImages = false;
             loadSibImage(beginId,true);
     });
     /*

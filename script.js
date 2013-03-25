@@ -60,11 +60,12 @@
     function resizeImage(img)
     {
         var dataImg = images[$(img).attr('data-id')];
+        $window = $(window);
         /*console.log($(img).attr('data-id'));
         console.log(dataImg);  */
         /*alert('touch_e='+touch_e);  */
-        var reqheight = ($(window).height()-(50+touch_e));
-        var reqwidth = $(window).width()-50;
+        var reqheight = ($window.height()-(50+touch_e));
+        var reqwidth = $window.width()-50;
        /*alert('reqh='+reqheight);*/
         console.log('reqH=',reqheight,' reqW=',reqwidth);
 
@@ -93,8 +94,8 @@
             }
         }
         $(img).css({
-            'margin-left': $(img).width() / -2,
-            'margin-top': $(img).height() / -2
+            'left': ($window.width()-(img).width())/2,
+            'top': ($window.height()-(img).height()-touch_e)/2
         });
     }
     /*

@@ -77,10 +77,8 @@ body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
     cursor: pointer;
 }
 .btn_prep {
-    float:left;
     background-image: url('btn_prep.png');
 }
 .btn_next {
-    float:right;
     background-image: url('btn_next.png');
 }

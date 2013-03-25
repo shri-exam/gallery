@@ -267,8 +267,7 @@
             $(spiner).prependTo('.main').css({
                 'marginTop': ($window.height()-$(this).height())/3
             })
-                .delegate('.btn_prep','click',function(){loadSibImage(preload,false);})
-                .delegate('.btn_next','click',function(){loadSibImage(nextload,true);});
+
 
             var img = images[($(this).attr('data-id'))];
             var lightbox =  $('<img/>',{
@@ -280,7 +279,8 @@
                     $('.spiner').remove();
                     $(this).animate({opacity:1},300);
                 });
-        });
+        }).delegate('.btn_prep','click',function(){alert('prep');loadSibImage(preload,false);})
+          .delegate('.btn_next','click',function(){alert('next');loadSibImage(nextload,true);});
         $('.main').delegate('.lightbox','click',function(){
             $('.lightbox').remove();
         });

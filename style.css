@@ -70,3 +70,16 @@ body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
     z-index: 8;
     opacity: 0;
 }
+.btn {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+}
+.btn_prep {
+    float:left;
+    background-image: url('btn_prep.png');
+}
+.btn_next {
+    float:right;
+    background-image: url('btn_next.png');
+}

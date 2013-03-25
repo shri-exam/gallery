@@ -23,7 +23,7 @@ body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
     overflow-x: scroll;
     position: absolute;
     bottom: 10px;
-    z-index: 9;
+    z-index: 99;
 }
 .gallery td img {
     height: 100px;

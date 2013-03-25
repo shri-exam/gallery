@@ -250,7 +250,7 @@
             },
             function(){
                 hovergallery=false;
-                $(this).slideUp(400);
+                if (touch === false){$(this).slideUp(400);}
             });
         $window
             .bind('scrollOn',function(){
@@ -292,7 +292,6 @@
             hovergallery=true;
             touch = true;
             $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');
-            $('.gallery').unbind('hover').show();
             $('.hovergallery').remove();
         });
         $gallery.bind('btn-replace',function(){

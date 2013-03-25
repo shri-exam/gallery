@@ -63,8 +63,8 @@
         /*console.log($(img).attr('data-id'));
         console.log(dataImg);  */
         /*alert('touch_e='+touch_e);  */
-        var reqheight = ($(window).height()-(30+touch_e));
-        var reqwidth = $(window).width()-30;
+        var reqheight = ($(window).height()-(50+touch_e));
+        var reqwidth = $(window).width()-50;
        /*alert('reqh='+reqheight);*/
         console.log('reqH=',reqheight,' reqW=',reqwidth);
 

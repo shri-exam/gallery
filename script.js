@@ -6,6 +6,7 @@
     var images = []; /* Массив для картинок */
     var imgId = []; /* массив Объектов  где хранятся только id картинок */
     var next = 1; /* адрес следующей страницы пагинации */
+    var rememberScroll=0;
     var hovergallery = false;
     var beginId = "175189";
     var loadImages = $.Deferred();
@@ -62,6 +63,7 @@
     function resizeImage(img)
     {
         var dataImg = images[$(img).attr('data-id')];
+        if (!dataImg) { return false;}
         $window = $(window);
         /*console.log($(img).attr('data-id'));
         console.log(dataImg);  */
@@ -70,6 +72,7 @@
         var reqwidth = $window.width()-20;
        /*alert('reqh='+reqheight);*/
         console.log('reqH=',reqheight,' reqW=',reqwidth);
+
 
         if (dataImg.height<reqheight && dataImg.width<reqwidth)
         {
@@ -254,16 +257,86 @@
     }
     function sdvig(img)
     {
-        var offsetLeft = $(img).offset().left;
-        console.log('svig=',offsetLeft);
-        var $gallery = $('.gallery');
-        var z = $gallery.scrollLeft()-($(window).width()/2-$(img).width()/2-offsetLeft);
-        console.log(
-            'galleryLeft=',$gallery.scrollLeft()
-            ,' windowsW/2=',$(window).width()/2
-            ,' z=',z
-        );
-        $gallery.animate({ scrollLeft: z}, 500);
+        console.log('sdvig  img=',img);
+        if (img.length)
+        {
+            var offsetLeft = $(img).offset().left;
+            console.log('sdvig offsetLeft=',offsetLeft);
+            var $gallery = $('.gallery');
+            var z = $gallery.scrollLeft()-($(window).width()/2-$(img).width()/2-offsetLeft);
+            console.log(
+                'galleryLeft=',$gallery.scrollLeft()
+                ,' windowsW/2=',$(window).width()/2
+                ,' z=',z
+            );
+            $gallery.animate({ scrollLeft: z}, 500);
+            rememberScroll = z;
+        }
+        else
+        {
+            console.log('sdvig propusk');
+        }
+    }
+    /*
+    * @param {string} data_id  {nubmer} x
+    *
+    * */
+    function showLightBoxById (data_id,x)
+    {
+        if (data_id)
+        {
+            x = x || 0;
+            x = Number(x);
+            console.log('x bylo = ',x);
+            data_id = Number(data_id);
+            console.log('data_id=',data_id,' x=',x);
+            var newIndex = Number(searchIndex(data_id))+x;
+            console.log('newIndex=',newIndex);
+            if (imgId[newIndex])
+            {
+                $(spiner).prependTo('.main').css({
+                    'marginTop': ($window.height()-($(this).height()+touch_e))/2
+                });
+                var new_data_id = images[imgId[newIndex].id];
+                console.log('new_data_id = ',new_data_id);
+                $('.lightbox').remove();
+                var $rowimg = $('.row img');
+                var newimg = $rowimg.removeClass('current').
+                    filter('[data-id='+new_data_id.id+']').eq(0).addClass('current');
+                var thisindex = $rowimg.index(newimg);
+                if (thisindex == 0)
+                {
+                    /* подгружаем картинки в начало */
+                    loadSibImage(preload,false)
+                }
+                console.log('thisindex=',thisindex);
+                /* подгружаем если первый или последний */
+
+
+                console.log('newimg=',newimg);
+                sdvig(newimg);
+
+                var lightbox =  $('<img/>',{
+                    src: new_data_id.l_link,
+                    class: 'lightbox',
+                    'data-id': new_data_id.id
+                }).appendTo('.main').load(function(){
+                        resizeImage($(this));
+                        $('.spiner').remove();
+                        $(this).animate({opacity:1},300);
+                    });
+            }
+            else
+            {
+                console.log('elementa imgId s indexom=',newIndex,' netu :-(');
+                $('.spiner').remove();
+            }
+        }
+        else
+        {
+            console.log('nepravilnuy data-id=',data_id);
+            $('.spiner').remove();
+        }
     }
     /* после загрузки страницы */
     $(function(){
@@ -277,7 +350,8 @@
             },
             function(){
                 hovergallery=false;
-                if (touch_e === 0){$(this).slideUp(400);}
+
+                if (touch_e === 0){rememberScroll = $(this).scrollLeft();$(this).slideUp(400);}
             });
         $window
             .bind('scrollOn',function(){
@@ -290,22 +364,7 @@
             .resize(function(){resizeImage($('.lightbox').eq(0));});
 
         $('.row').delegate('td img','click',function(){
-            $(this).parent('td').addClass('current').siblings().removeClass('current');
-            sdvig($(this));
-            $('.lightbox').remove();
-            $(spiner).prependTo('.main').css({
-                'marginTop': ($window.height()-($(this).height()+touch_e))/2
-            });
-            var img = images[($(this).attr('data-id'))];
-            var lightbox =  $('<img/>',{
-                src: img.l_link,
-                class: 'lightbox',
-                'data-id': img.id
-            }).appendTo('.main').load(function(){
-                    resizeImage($(this));
-                    $('.spiner').remove();
-                    $(this).animate({opacity:1},300);
-                });
+            showLightBoxById($(this).attr('data-id'));
         }).delegate('.btn_prep','click',function(){
                 loadSibImage(preload,false);
             })
@@ -317,7 +376,7 @@
             $('.lightbox').remove();$('.gallery').trigger('btn-replace');
         });
         $('.hovergallery').hover(function(){
-            $('.gallery').slideDown(400);
+            $('.gallery').scrollLeft(rememberScroll).slideDown(400);
         });
         $('body').bind('touchmove',function(){
             /* меняем интерфейс на тачкриновский */
@@ -328,13 +387,27 @@
             hovergallery=true;
             $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');
             $('.hovergallery').remove();
-        });
+        }).hover(function(){
+                $('.krug').animate({opacity:0.5},300);
+            },function(){
+                $('.krug').animate({opacity:0},300);
+            });
         $gallery.bind('btn-replace',function(){
             if (touch_e > 0)
             {
                 $('.btn').remove();
                 $('.row').prepend('<td class="btn btn_prep"></td>').append('<td class="btn btn_next"></td>');
             }
+        });
+        $('.krug_prep').click(function()
+        {
+            console.log('click krug_prep');
+            showLightBoxById($('.lightbox').attr('data-id'),-1)
+        });
+        $('.krug_next').click(function()
+        {
+            console.log('click krug_next');
+            showLightBoxById($('.lightbox').attr('data-id'),1)
         });
     });
 }());

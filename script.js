@@ -2,6 +2,7 @@
     /* ######## default setting ################## */
     var user = 'aig1001',album = '63684'; domen = "http://api-fotki.yandex.ru"; /* Имя пользователя и название альбома на яндекс фотках    */
     var j = "&format=json&callback=?";
+    var touch = false; /* тачскрин по умолчанию fallse */
     var images = []; /* Массив для картинок */
     var imgId = []; /* массив Объектов  где хранятся только id картинок */
     var next = 1; /* адрес следующей страницы пагинации */
@@ -163,6 +164,7 @@
                                     /*$('.gallery').scrollLeft(count*120);  */
                                 }
                                 $('.loading').remove();
+                                $('.gallery').trigger('btn-replace');
                                 /* привязываем обработчики обратно */
                                 blockLoadImages = false;
                             });
@@ -288,12 +290,16 @@
         $('body').bind('touchmove',function(){
             /* меняем интерфейс на тачкриновский */
             /* отсвязываем события прокрутки */
+            touch = true;
             $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');
-            $('.gallery').unbind('hover').slideDown(400).trigger('btn-replace');
+            $('.gallery').unbind('hover').slideDown(400);
         });
         $gallery.bind('btn-replace',function(){
-            $('.btn').remove();
-            $('.row').prepend('<td class="btn btn_prep"></td>').append('<td class="btn btn_next"></td>');
+            if (touch)
+            {
+                $('.btn').remove();
+                $('.row').prepend('<td class="btn btn_prep"></td>').append('<td class="btn btn_next"></td>');
+            }
         });
     });
 }());

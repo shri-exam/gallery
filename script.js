@@ -288,21 +288,17 @@
             $('.gallery').slideDown(400);
         });
         $('body').bind('touchmove',function(){
-            alert('touch');
             /* меняем интерфейс на тачкриновский */
             /* отсвязываем события прокрутки */
-            if (touch === false ) {touch = true;('.gallery').trigger('btn-replace');}
+            ('.gallery').trigger('btn-replace');
             hovergallery=true;
-
             $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');
             $('.hovergallery').remove();
         });
         $gallery.bind('btn-replace',function(){
-            if (touch)
-            {
+            alert('touch');
                 $('.btn').remove();
                 $('.row').prepend('<td class="btn btn_prep"></td>').append('<td class="btn btn_next"></td>');
-            }
         });
     });
 }());

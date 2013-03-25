@@ -278,5 +278,8 @@
         $('.hovergallery').hover(function(){
             $('.gallery').slideDown(400);
         });
+        $('body').bind('touchmove',function(){
+            alert('toch');
+        });
     });
 }());

@@ -4,31 +4,28 @@ body,html {
     overflow-x: hidden;
 }
 body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
-/*.gallery::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}    */
+.gallery::-webkit-scrollbar {display: none;}
 .main {
     height: 99%;
     margin: 0 auto;
-    border: 3px solid #fff;
     width: 100%;
     position: fixed;
     z-index: 1;
 
 }
 .gallery {
+    padding: 5px 0;
     width: 99%;
-    height: 120px;
-    border: 2px solid red;
-    color: red;
     overflow-y: hidden;
     overflow-x: scroll;
     position: absolute;
     bottom: 10px;
     z-index: 99;
+    background-color: rgba(0,0,0,0.5);
 }
 .gallery td img {
     height: 100px;
     margin-right: 5px;
-    border: 1px solid #fff;
     cursor:pointer;
     opacity: 0;
 }

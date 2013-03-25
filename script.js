@@ -71,7 +71,6 @@
 
         if (dataImg.height<reqheight && dataImg.width<reqwidth)
         {
-            alert('ORIGINAL');
             $(img).height(dataImg.height);
             $(img).width(dataImg.width);
         }

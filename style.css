@@ -49,6 +49,18 @@ body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
     outline: 9999px solid rgba(0,0,0,0.5);
     z-index: 0;
 }
+.preload {
+    display: block;
+    width: 200px;
+    height: 200px;
+    background-color: #fff;
+    margin: 10% auto;
+    outline: 9999px solid rgba(0,0,0,0.5);
+    z-index: 1;
+    background-image: url('loading.gif');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
 .hovergallery {
     width: 99%;
     height: 120px;

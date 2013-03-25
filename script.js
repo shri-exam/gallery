@@ -2,9 +2,8 @@
     /* ######## default setting ################## */
     var user = 'aig1001',album = '63684'; domen = "http://api-fotki.yandex.ru"; /* Имя пользователя и название альбома на яндекс фотках    */
     var j = "&format=json&callback=?";
-    var limit = 10; /* лимит постраничного вывода */
     var images = []; /* Массив для картинок */
-    var imgId = []; /* массив где хранятся только id картинок */
+    var imgId = []; /* массив Объектов  где хранятся только id картинок */
     var next = 1; /* адрес следующей страницы пагинации */
     var hovergallery = false;
     var beginId = "175189";
@@ -14,8 +13,7 @@
     var loading = $('<td/>',{
         class: 'loading'
     });
-    function l(l){console.log(l);}
-    /* ####### end default settings ####### */
+
     function getAllAlbumImages()
     {
         $('.row').append(loading);
@@ -46,15 +44,10 @@
         }
         else
         {
-
-            l(images);
-            l(imgId);
-            l(imgId.length);
             loadImages.resolve();
         }
     }
     loadImages.done(function(){
-            l('All img load');
             loadSibImage(beginId,true);
     });
     /*
@@ -98,6 +91,18 @@
         });
     }
     /*
+    * @param {number}
+    *
+    * */
+    function searchIndex(id)
+    {
+        for (var i=0 in imgId)
+        {
+            if (imgId[i].id == id) {return i;}
+        }
+        return false;
+    }
+    /*
     * @param {string} id, {boolean} next
     *
     */
@@ -113,11 +118,9 @@
                 else { $row.prepend(loading);console.log('ADD BEGIN');}
 
                 console.log('id=',id); console.log('next=',next);
+
                 var indexImg = false;
-                for (i in imgId)
-                {
-                    if (imgId[i].id == id) {indexImg = i;break;}
-                }
+                indexImg = searchIndex(id);
 
                 console.log('indexImg=',indexImg);
                 indexImg = Number(indexImg);
@@ -156,7 +159,7 @@
                                 else
                                 {
                                     $(insertTd).prependTo('.row').find('img').animate({opacity:1},300);
-                                    $('.gallery').scrollLeft(count*120);
+                                    /*$('.gallery').scrollLeft(count*120);  */
                                 }
                                 $('.loading').remove();
                                 /* привязываем обработчики обратно */
@@ -256,6 +259,8 @@
 
         $('.row').delegate('td img','click',function(){
             $('.lightbox').remove();
+            $('.main').prepend('<div class="preload"></div>');
+
             var img = images[($(this).attr('data-id'))];
             var lightbox =  $('<img/>',{
                 src: img.l_link,
@@ -263,6 +268,7 @@
                 'data-id': img.id
             }).appendTo('.main').load(function(){
                     resizeImage($(this));
+                    $('.preload').remove();
                     $(this).animate({opacity:1},300);
                 });
         });

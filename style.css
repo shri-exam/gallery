@@ -47,7 +47,6 @@ body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
     top: 50%;
     left: 50%;
     margin: 0;
-    outline: 9999px solid rgba(0,0,0,0.5);
     z-index: 0;
 }
 .spiner {
@@ -56,7 +55,6 @@ body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
     height: 200px;
     background-color: #fff;
     margin: 0 auto;
-    outline: 9999px solid rgba(0,0,0,0.5);
     z-index: 1;
     background-image: url('loading.gif');
     background-repeat: no-repeat;

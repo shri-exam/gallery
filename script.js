@@ -62,6 +62,7 @@
         var dataImg = images[$(img).attr('data-id')];
         /*console.log($(img).attr('data-id'));
         console.log(dataImg);  */
+        alert(touch);
         var reqheight = $(window).height()-20-touch;
         var reqwidth = $(window).width()-20;
         //alert(touch);

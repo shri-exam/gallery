@@ -63,7 +63,7 @@
         /*console.log($(img).attr('data-id'));
         console.log(dataImg);  */
         alert(touch);
-        var reqheight = $(window).height()-30-touch;
+        var reqheight = $(window).height()-(30+touch);
         var reqwidth = $(window).width()-30;
         //alert(touch);
         console.log('reqH=',reqheight,' reqW=',reqwidth);

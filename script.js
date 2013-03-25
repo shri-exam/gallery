@@ -280,7 +280,7 @@
         }).delegate('.btn_prep','click',function(){alert('prep');loadSibImage(preload,false);})
           .delegate('.btn_next','click',function(){alert('next');loadSibImage(nextload,true);});
         $('.main').delegate('.lightbox','click',function(){
-            $('.lightbox').remove();$('.gallery')trigger('btn-replace');
+            $('.lightbox').remove();$('.gallery').trigger('btn-replace');
         });
         $('.hovergallery').hover(function(){
             $('.gallery').slideDown(400);

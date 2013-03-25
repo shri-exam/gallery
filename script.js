@@ -286,6 +286,7 @@
             $('.gallery').slideDown(400);
         });
         $('body').bind('touchmove',function(){
+            alert('touch');
             /* меняем интерфейс на тачкриновский */
             /* отсвязываем события прокрутки */
             if (touch === false ) {$gallery.trigger('btn-replace');}
@@ -299,9 +300,7 @@
             {
                 $('.btn').remove();
                 $('.row').prepend('<td class="btn btn_prep"></td>').append('<td class="btn btn_next"></td>');
-                $('.gallery').show();$(window).scrollTop(0);
             }
-
         });
     });
 }());

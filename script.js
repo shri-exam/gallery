@@ -13,7 +13,7 @@
     var loading = $('<td/>',{
         class: 'loading'
     });
-    var spiner = $('<div/>',{ class: 'spiner', height: '200px', width:  '200px'});
+    var spiner = $('<div/>',{ class: 'spiner'});
 
     function getAllAlbumImages()
     {
@@ -233,12 +233,8 @@
     {
         $(window)
             .scroll(function(){
-                console.log('WINDOWS SCROLLING');
-                loadScroll();
-                $(window).scrollTop(100);
-            }).bind('touchmove',function(){ loadScroll(); });
-
-        $('.gallery').scroll(function(){console.log('GALLERY SCROLLING ');loadScroll();});
+                 $(this).trigger('scrollOn');
+            });
     }
     /* после загрузки страницы */
     $(function(){
@@ -254,6 +250,11 @@
                 $(this).slideUp(400);
             });
         $window
+            .bind('scrollOn',function(){
+                console.log('ScrollOn = WINDOWS SCROLLING');
+                loadScroll();
+                $(window).scrollTop(100);
+            })
             .bind('scroll-next',function(){console.log('loadiing NEXT');loadSibImage(nextload,true);})
             .bind('scroll-prep',function(){console.log('loadiing PREP');loadSibImage(preload,false);})
             .resize(function(){resizeImage($('.lightbox').eq(0));});
@@ -261,7 +262,7 @@
         $('.row').delegate('td img','click',function(){
             $('.lightbox').remove();
             $(spiner).prependTo('.main').css({
-                'marginTop': ($window.height()-$(this).height())/2
+                'marginTop': ($window.height()-$(this).height())/3
             });
 
             var img = images[($(this).attr('data-id'))];
@@ -282,7 +283,11 @@
             $('.gallery').slideDown(400);
         });
         $('body').bind('touchmove',function(){
-            alert('toch');
+            /* меняем интерфейс на тачкриновский */
+
+            /* отсвязываем события прокрутки */
+            $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');
+            $('.gallery').unbind('hover').slideDown(400);
         });
     });
 }());

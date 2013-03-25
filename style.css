@@ -33,13 +33,12 @@ body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
     opacity: 0;
 }
 .loading {
-    display: inline-block;
     background-color: #fff;
     background-image: url('loading.gif');
-    height:100px;
-    width:100px;
-    background-position: center center;
     background-repeat: no-repeat;
+    background-position: center center;
+    width: 100px;
+    height: 100px;
 }
 .lightbox {
     opacity: 0;

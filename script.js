@@ -64,13 +64,14 @@
         /*console.log($(img).attr('data-id'));
         console.log(dataImg);  */
         /*alert('touch_e='+touch_e);  */
-        var reqheight = ($window.height()-(50+touch_e));
-        var reqwidth = $window.width()-50;
+        var reqheight = ($window.height()-(20+touch_e));
+        var reqwidth = $window.width()-20;
        /*alert('reqh='+reqheight);*/
         console.log('reqH=',reqheight,' reqW=',reqwidth);
 
         if (dataImg.height<reqheight && dataImg.width<reqwidth)
         {
+            alert('ORIGINAL');
             $(img).height(dataImg.height);
             $(img).width(dataImg.width);
         }
@@ -271,8 +272,8 @@
         $('.row').delegate('td img','click',function(){
             $('.lightbox').remove();
             $(spiner).prependTo('.main').css({
-                'marginTop': ($window.height()-$(this).height())/3
-            })
+                'marginTop': ($window.height()-($(this).height()+touch_e))/2
+            });
             var img = images[($(this).attr('data-id'))];
             var lightbox =  $('<img/>',{
                 src: img.l_link,
@@ -283,8 +284,13 @@
                     $('.spiner').remove();
                     $(this).animate({opacity:1},300);
                 });
-        }).delegate('.btn_prep','click',function(){/*t('prep');*/loadSibImage(preload,false);})
-          .delegate('.btn_next','click',function(){/*alert('next');*/loadSibImage(nextload,true);});
+        }).delegate('.btn_prep','click',function(){
+                loadSibImage(preload,false);
+            })
+          .delegate('.btn_next','click',function()
+            {
+                loadSibImage(nextload,true);
+            });
         $('.main').delegate('.lightbox','click',function(){
             $('.lightbox').remove();$('.gallery').trigger('btn-replace');
         });
@@ -294,16 +300,19 @@
         $('body').bind('touchmove',function(){
             /* меняем интерфейс на тачкриновский */
             /* отсвязываем события прокрутки */
-            touch_e = $('.gallery').height()+30;
-            $('.gallery').trigger('btn-replace');
+            var $gallery =  $('.gallery');
+            touch_e = $gallery.height()+30;
+            $gallery.trigger('btn-replace');
             hovergallery=true;
             $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');
             $('.hovergallery').remove();
         });
         $gallery.bind('btn-replace',function(){
-
+            if (touch_e > 0)
+            {
                 $('.btn').remove();
                 $('.row').prepend('<td class="btn btn_prep"></td>').append('<td class="btn btn_next"></td>');
+            }
         });
     });
 }());

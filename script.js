@@ -63,7 +63,7 @@
         /*console.log($(img).attr('data-id'));
         console.log(dataImg);  */
         var reqheight = $(window).height()-20-touch;
-        var reqwidth = $(window).width()-20-touch;
+        var reqwidth = $(window).width()-20;
         //alert(touch);
         console.log('reqH=',reqheight,' reqW=',reqwidth);
 
@@ -291,10 +291,8 @@
         $('body').bind('touchmove',function(){
             /* меняем интерфейс на тачкриновский */
             /* отсвязываем события прокрутки */
-            $gallery = $('.gallery');
-            touch = $('.gallery').find('table').height();
-            alert('gallery touch = '+touch);
-            $gallery.trigger('btn-replace');
+            touch = $('.gallery').height();
+            $('.gallery').trigger('btn-replace');
             hovergallery=true;
             $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');
             $('.hovergallery').remove();

@@ -121,6 +121,7 @@
     */
     function loadSibImage(id,next)
     {
+        var loadSibImage_dfd = $.Deferred();
         if (blockLoadImages === false)
         {
             blockLoadImages = true;
@@ -181,10 +182,13 @@
                                 }
                                 $('.loading').remove();
                                 $gallery.trigger('btn-replace');
-
                                 /* привязываем обработчики обратно */
                                 blockLoadImages = false;
+                                loadSibImage_dfd.resolve();
+
+
                             });
+                            return loadSibImage_dfd.promise();
                         }
                         else
                         {
@@ -294,8 +298,10 @@
             console.log('newIndex=',newIndex);
             if (imgId[newIndex])
             {
-                $(spiner).prependTo('.main').css({
-                    'marginTop': ($window.height()-($(this).height()+touch_e))/2
+                $(spiner).prependTo('.main')
+                .css({
+                    top: ($window.height()-(200+touch_e))/2,
+                    left: ($window.width()-200)/2
                 });
                 var new_data_id = images[imgId[newIndex].id];
                 console.log('new_data_id = ',new_data_id);
@@ -307,7 +313,20 @@
                 if (thisindex == 0)
                 {
                     /* подгружаем картинки в начало */
-                    loadSibImage(preload,false)
+                    loadSibImage(preload,false).then(function()
+                    {
+                        console.log('deffered PRELOAD sdvig');
+                        sdvig(newimg);
+                    });
+                }
+                if (thisindex == ($rowimg.length-1))
+                {
+                    /* подгружаем картинки в конец */
+                    loadSibImage(nextload,true).done(function()
+                    {
+                        console.log('deffered NEXTLOAD sdvig');
+                        sdvig(newimg);
+                    });
                 }
                 console.log('thisindex=',thisindex);
                 /* подгружаем если первый или последний */

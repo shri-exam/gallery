@@ -53,13 +53,12 @@ table {
     z-index: 0;
 }
 .spiner {
-    top: 35%;
+    position: fixed;
     opacity: 0.3;
     display: block;
     width: 200px;
     height: 200px;
     background-color: #fff;
-    margin: 35% auto;
     z-index: 1;
     background-image: url('loading.gif');
     background-repeat: no-repeat;

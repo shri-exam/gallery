@@ -280,7 +280,7 @@
         }).delegate('.btn_prep','click',function(){alert('prep');loadSibImage(preload,false);})
           .delegate('.btn_next','click',function(){alert('next');loadSibImage(nextload,true);});
         $('.main').delegate('.lightbox','click',function(){
-            $('.lightbox').remove();
+            $('.lightbox').remove();$('.gallery')trigger('btn-replace');
         });
         $('.hovergallery').hover(function(){
             $('.gallery').slideDown(400);
@@ -300,6 +300,7 @@
                 $('.btn').remove();
                 $('.row').prepend('<td class="btn btn_prep"></td>').append('<td class="btn btn_next"></td>');
             }
+            $(this).show();
         });
     });
 }());

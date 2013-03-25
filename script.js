@@ -290,6 +290,7 @@
         $('body').bind('touchmove',function(){
             /* меняем интерфейс на тачкриновский */
             /* отсвязываем события прокрутки */
+            if (touch === false ) {$gallery.trigger('btn-replace');}
             touch = true;
             $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');
             $('.gallery').unbind('hover').slideDown(400);

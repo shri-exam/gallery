@@ -267,8 +267,6 @@
             $(spiner).prependTo('.main').css({
                 'marginTop': ($window.height()-$(this).height())/3
             })
-
-
             var img = images[($(this).attr('data-id'))];
             var lightbox =  $('<img/>',{
                 src: img.l_link,
@@ -293,7 +291,8 @@
             if (touch === false ) {$gallery.trigger('btn-replace');}
             touch = true;
             $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');
-            $('.gallery').unbind('hover').slideDown(400);
+            $('.gallery').unbind('hover').show();
+            $('.hovergallery').remove();
         });
         $gallery.bind('btn-replace',function(){
             if (touch)

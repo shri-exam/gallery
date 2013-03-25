@@ -62,10 +62,10 @@
         var dataImg = images[$(img).attr('data-id')];
         /*console.log($(img).attr('data-id'));
         console.log(dataImg);  */
-        alert('touch_e='+touch_e);
+        /*alert('touch_e='+touch_e);  */
         var reqheight = ($(window).height()-(30+touch_e));
         var reqwidth = $(window).width()-30;
-       alert('reqh='+reqheight);
+       /*alert('reqh='+reqheight);*/
         console.log('reqH=',reqheight,' reqW=',reqwidth);
 
         if (dataImg.height<reqheight && dataImg.width<reqwidth)
@@ -75,7 +75,7 @@
         }
         else
         {
-            alert('delaem resize');
+            /*alert('delaem resize'); */
             var tempHeight = $(img).height();
             console.log('tempHeight=',tempHeight);
             var tempWidth = $(img).width();
@@ -282,8 +282,8 @@
                     $('.spiner').remove();
                     $(this).animate({opacity:1},300);
                 });
-        }).delegate('.btn_prep','click',function(){alert('prep');loadSibImage(preload,false);})
-          .delegate('.btn_next','click',function(){alert('next');loadSibImage(nextload,true);});
+        }).delegate('.btn_prep','click',function(){/*t('prep');*/loadSibImage(preload,false);})
+          .delegate('.btn_next','click',function(){/*alert('next');*/loadSibImage(nextload,true);});
         $('.main').delegate('.lightbox','click',function(){
             $('.lightbox').remove();$('.gallery').trigger('btn-replace');
         });
@@ -293,7 +293,7 @@
         $('body').bind('touchmove',function(){
             /* меняем интерфейс на тачкриновский */
             /* отсвязываем события прокрутки */
-            touch_e = $('.gallery').height()*2;
+            touch_e = $('.gallery').height()+30;
             $('.gallery').trigger('btn-replace');
             hovergallery=true;
             $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');

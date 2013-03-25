@@ -49,12 +49,12 @@ body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
     outline: 9999px solid rgba(0,0,0,0.5);
     z-index: 0;
 }
-.preload {
+.spiner {
     display: block;
     width: 200px;
     height: 200px;
     background-color: #fff;
-    margin: 10% auto;
+    margin: 0 auto;
     outline: 9999px solid rgba(0,0,0,0.5);
     z-index: 1;
     background-image: url('loading.gif');

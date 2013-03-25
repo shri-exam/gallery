@@ -13,6 +13,7 @@
     var loading = $('<td/>',{
         class: 'loading'
     });
+    var spiner = $('<div/>',{ class: 'spiner', height: '200px', width:  '200px'});
 
     function getAllAlbumImages()
     {
@@ -259,7 +260,9 @@
 
         $('.row').delegate('td img','click',function(){
             $('.lightbox').remove();
-            $('.main').prepend('<div class="preload"></div>');
+            $(spiner).prependTo('.main').css({
+                'marginTop': ($window.height()-$(this).height())/2
+            });
 
             var img = images[($(this).attr('data-id'))];
             var lightbox =  $('<img/>',{
@@ -268,7 +271,7 @@
                 'data-id': img.id
             }).appendTo('.main').load(function(){
                     resizeImage($(this));
-                    $('.preload').remove();
+                    $('.spiner').remove();
                     $(this).animate({opacity:1},300);
                 });
         });

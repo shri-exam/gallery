@@ -11,7 +11,8 @@
     var loadImages = $.Deferred();
     var blockLoadImages = false;
     var preload=Number(beginId),nextload = true;
-    if ($.browser.mozilla) {var step=10;} else {var step=1;}
+    var step=1; if (/firefox/i.test(navigator.userAgent))  {alert('fire');step=3;}
+
     var loading = $('<td/>',{
         class: 'loading'
     });

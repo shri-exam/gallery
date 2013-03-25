@@ -299,8 +299,9 @@
             {
                 $('.btn').remove();
                 $('.row').prepend('<td class="btn btn_prep"></td>').append('<td class="btn btn_next"></td>');
+                $('.gallery').show();$(window).scrollTop(0);
             }
-            $('.gallery').show();$(window).scrollTop(100);
+
         });
     });
 }());

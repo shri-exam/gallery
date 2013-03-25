@@ -14,7 +14,6 @@ body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
 
 }
 .gallery {
-    padding: 5px 0;
     width: 99%;
     overflow-y: hidden;
     overflow-x: scroll;
@@ -23,9 +22,17 @@ body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
     z-index: 99;
     background-color: rgba(0,0,0,0.5);
 }
+table {
+    border-collapse: collapse;
+}
+.gallery td {
+    padding: 5px;
+}
+.current {
+    border: 3px solid #1982A0;
+}
 .gallery td img {
     height: 100px;
-    margin-right: 5px;
     cursor:pointer;
     opacity: 0;
 }

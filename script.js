@@ -11,6 +11,7 @@
     var loadImages = $.Deferred();
     var blockLoadImages = false;
     var preload=Number(beginId),nextload = true;
+    if ($.browser.mozilla) {var step=10;} else {var step=1;}
     var loading = $('<td/>',{
         class: 'loading'
     });
@@ -161,16 +162,22 @@
 
                             var insertImg = loadTiles(images[imgId[newIndexImg].id]);
 
-                            insertImg.then(function(ins){
+                            insertImg.then(function(ins)
+                            {
+                                var $gallery = $('.gallery');
                                 var insertTd = $('<td/>').append(ins);
                                 if (next) {$(insertTd).appendTo('.row').find('img').animate({opacity:1},300);}
                                 else
                                 {
                                     $(insertTd).prependTo('.row').find('img').animate({opacity:1},300);
-                                    /*$('.gallery').scrollLeft(count*120);  */
+                                    if (touch_e === 0 )
+                                    {
+                                        $gallery.scrollLeft(count*100);
+                                    }
                                 }
                                 $('.loading').remove();
-                                $('.gallery').trigger('btn-replace');
+                                $gallery.trigger('btn-replace');
+
                                 /* привязываем обработчики обратно */
                                 blockLoadImages = false;
                             });
@@ -217,8 +224,8 @@
         {
             var windowscrolltop = $(window).scrollTop();
             var galleryscrollleft = $('.gallery').scrollLeft();
-            if (windowscrolltop<100 ) {$('.gallery').scrollLeft(galleryscrollleft-(100-windowscrolltop));}
-            else {$('.gallery').scrollLeft(galleryscrollleft+(windowscrolltop-100));}
+            if (windowscrolltop<100 ) {$('.gallery').scrollLeft(galleryscrollleft-(100*step-windowscrolltop));}
+            else {$('.gallery').scrollLeft(galleryscrollleft+(windowscrolltop-100*step));}
 
 
             $gallery = $('.gallery');
@@ -243,6 +250,19 @@
             .scroll(function(){
                  $(this).trigger('scrollOn');
             });
+    }
+    function sdvig(img)
+    {
+        var offsetLeft = $(img).offset().left;
+        console.log('svig=',offsetLeft);
+        var $gallery = $('.gallery');
+        var z = $gallery.scrollLeft()-($(window).width()/2-$(img).width()/2-offsetLeft);
+        console.log(
+            'galleryLeft=',$gallery.scrollLeft()
+            ,' windowsW/2=',$(window).width()/2
+            ,' z=',z
+        );
+        $gallery.animate({ scrollLeft: z}, 500);
     }
     /* после загрузки страницы */
     $(function(){
@@ -269,6 +289,8 @@
             .resize(function(){resizeImage($('.lightbox').eq(0));});
 
         $('.row').delegate('td img','click',function(){
+            $(this).parent('td').addClass('current').siblings().removeClass('current');
+            sdvig($(this));
             $('.lightbox').remove();
             $(spiner).prependTo('.main').css({
                 'marginTop': ($window.height()-($(this).height()+touch_e))/2

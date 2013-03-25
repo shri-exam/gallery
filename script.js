@@ -94,7 +94,7 @@
         }
         $(img).css({
             'margin-left': $(img).width() / -2,
-            'margin-top': $(img).height() / -2
+            'margin-top': $(img).height() / -4
         });
     }
     /*

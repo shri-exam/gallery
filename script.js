@@ -75,6 +75,7 @@
         }
         else
         {
+            alert('delaem resize');
             var tempHeight = $(img).height();
             console.log('tempHeight=',tempHeight);
             var tempWidth = $(img).width();

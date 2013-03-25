@@ -2,7 +2,7 @@
     /* ######## default setting ################## */
     var user = 'aig1001',album = '63684'; domen = "http://api-fotki.yandex.ru"; /* Имя пользователя и название альбома на яндекс фотках    */
     var j = "&format=json&callback=?";
-    var touch = 0; /* тачскрин по умолчанию fallse */
+    var touch_e = 0; /* тачскрин по умолчанию false */
     var images = []; /* Массив для картинок */
     var imgId = []; /* массив Объектов  где хранятся только id картинок */
     var next = 1; /* адрес следующей страницы пагинации */
@@ -62,10 +62,10 @@
         var dataImg = images[$(img).attr('data-id')];
         /*console.log($(img).attr('data-id'));
         console.log(dataImg);  */
-        alert(touch);
-        var reqheight = $(window).height()-(30+touch);
+        alert('touch_e='+touch_e);
+        var reqheight = ($(window).height()-(30+touch_e));
         var reqwidth = $(window).width()-30;
-        //alert(touch);
+       alert('reqh='+reqheight);
         console.log('reqH=',reqheight,' reqW=',reqwidth);
 
         if (dataImg.height<reqheight && dataImg.width<reqwidth)
@@ -254,7 +254,7 @@
             },
             function(){
                 hovergallery=false;
-                if (touch === 0){$(this).slideUp(400);}
+                if (touch_e === 0){$(this).slideUp(400);}
             });
         $window
             .bind('scrollOn',function(){
@@ -292,14 +292,13 @@
         $('body').bind('touchmove',function(){
             /* меняем интерфейс на тачкриновский */
             /* отсвязываем события прокрутки */
-            touch = $('.row').height();
             $('.gallery').trigger('btn-replace');
             hovergallery=true;
             $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');
             $('.hovergallery').remove();
         });
         $gallery.bind('btn-replace',function(){
-            /*alert('touch');      */
+                touch_e = $('.gallery').height();
                 $('.btn').remove();
                 $('.row').prepend('<td class="btn btn_prep"></td>').append('<td class="btn btn_next"></td>');
         });

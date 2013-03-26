@@ -468,7 +468,8 @@
                 },function(){
                 $('.krug').animate({opacity:0},300);
                 })
-        .delegate('.spiner','click',function(){ $(this).remove();});
+        .delegate('.spiner','click',function(){ $(this).remove();})
+        .one('touchmove',function(){resizeImage($('.lightbox').eq(0));});
 
         /* кнопки загрузок для тачскринов */
         $gallery.bind('btn-replace',function(){

@@ -10,7 +10,7 @@
     var loadImages = $.Deferred(); /* ждем пока загрузятся в массив все изоб-я альбома */
     var blockLoadImages = false; /* блок загрузок пока не завершились предыдущие */
     var preload=Number(localStorage['image']),nextload = true; /* сохраненная прошлая картинки */
-    var step=1; if (/firefox/i.test(navigator.userAgent))  {step=3;} /* приумноженная горизональная прокрутка для мозилы*/
+    var step=1; if (/firefox/i.test(navigator.userAgent))  {step=2;} /* приумноженная горизональная прокрутка для мозилы*/
 
     var loading = $('<td/>',{class: 'loading'});
     var spiner = $('<div/>',{ class: 'spiner'});
@@ -208,10 +208,6 @@
                                     {
                                         $gallery.scrollLeft(count*100);
                                     }
-                                    else
-                                    {
-                                        $gallery.trigger('btn-replace');
-                                    }
                                 }
                         }
                         else
@@ -268,9 +264,17 @@
         {
             var windowscrolltop = $(window).scrollTop();
             var galleryscrollleft = $('.gallery').scrollLeft();
-
-            if (windowscrolltop<100 ) {$('.gallery').scrollLeft(galleryscrollleft-(100-windowscrolltop*step));}
-            else {$('.gallery').scrollLeft(galleryscrollleft+(windowscrolltop*step-100));}
+            windowscrolltop = windowscrolltop*step;
+            if (windowscrolltop<100)
+            {
+                /*console.log('*** windowScrollTop < m =',windowscrolltop);*/
+                $('.gallery').scrollLeft(galleryscrollleft-(100-windowscrolltop));
+            }
+            else
+            {
+                console.log('*** windowScrollTop=',windowscrolltop);
+                $('.gallery').scrollLeft(galleryscrollleft+(windowscrolltop-100));
+            }
 
 
             $gallery = $('.gallery');

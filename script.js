@@ -208,6 +208,10 @@
                                     {
                                         $gallery.scrollLeft(count*100);
                                     }
+                                    else
+                                    {
+                                        $gallery.trigger('btn-replace');
+                                    }
                                 }
                         }
                         else
@@ -219,7 +223,6 @@
                     else
                     {
                         /* элемента не существует */
-                        $gallery.trigger('btn-replace');
                         if (next) {nextload = false;} else {preload = false;}
                         console.log('newIndexImg=',newIndexImg,' error: 3');
                         blockLoadImages = false;

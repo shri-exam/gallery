@@ -13,7 +13,7 @@
     var loadImages = $.Deferred();
     var blockLoadImages = false;
     var preload=Number(localStorage['image']),nextload = true;
-    var step=1; if (/firefox/i.test(navigator.userAgent))  {alert('fire');step=3;}
+    var step=1; if (/firefox/i.test(navigator.userAgent))  {step=3;}
 
     var loading = $('<td/>',{
         class: 'loading'
@@ -267,8 +267,8 @@
         {
             var windowscrolltop = $(window).scrollTop();
             var galleryscrollleft = $('.gallery').scrollLeft();
-            if (windowscrolltop<100 ) {$('.gallery').scrollLeft(galleryscrollleft-(100*step-windowscrolltop));}
-            else {$('.gallery').scrollLeft(galleryscrollleft+(windowscrolltop-100*step));}
+            if (windowscrolltop<100 ) {$('.gallery').scrollLeft(galleryscrollleft-(100-windowscrolltop*step));}
+            else {$('.gallery').scrollLeft(galleryscrollleft+(windowscrolltop*step-100));}
 
 
             $gallery = $('.gallery');

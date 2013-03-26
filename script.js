@@ -303,6 +303,10 @@
             console.log('newIndex=',newIndex);
             if (imgId[newIndex])
             {
+                var $rowimg = $('.row img');
+                var oldIndex = $rowimg.index($rowimg.filter('.current').eq(0));
+                console.log(' ======= oldIndex=',oldIndex);
+
                 $(spiner).prependTo('.main')
                 .css({
                     top: ($window.height()-(200+touch_e))/2,
@@ -310,45 +314,68 @@
                 });
                 var new_data_id = images[imgId[newIndex].id];
                 console.log('new_data_id = ',new_data_id);
-                $('.lightbox').remove();
-                var $rowimg = $('.row img');
+
                 var newimg = $rowimg.removeClass('current').
                     filter('[data-id='+new_data_id.id+']').eq(0).addClass('current');
                 var thisindex = $rowimg.index(newimg);
-                if (thisindex == 0)
+
+                var vlevoOrvpravo = $.Deferred();
+                $lightbox = $('.lightbox');
+                if ($lightbox)
                 {
-                    /* подгружаем картинки в начало */
-                    loadSibImage(preload,false).then(function()
+                    if (thisindex > oldIndex)
                     {
-                        console.log('deffered PRELOAD sdvig');
-                        sdvig(newimg);
-                    });
+                        console.log('EMED VLEVO');
+                        $lightbox.animate({left:'-200%'},800,function(){vlevoOrvpravo.resolve(); });
+                    }
+                    else
+                    {
+                        console.log('EMED VPRAVO');
+                        $lightbox.animate({left:'200%'},800,function(){vlevoOrvpravo.resolve(); });
+                    }
                 }
-                if (thisindex == ($rowimg.length-1))
+                else
                 {
-                    /* подгружаем картинки в конец */
-                    loadSibImage(nextload,true).done(function()
-                    {
-                        console.log('deffered NEXTLOAD sdvig');
-                        sdvig(newimg);
-                    });
+                    vlevoOrvpravo.resolve();
                 }
-                console.log('thisindex=',thisindex);
-                /* подгружаем если первый или последний */
+
+                vlevoOrvpravo.done(function(){
+                    if (thisindex == 0)
+                    {
+                        /* подгружаем картинки в начало */
+                        loadSibImage(preload,false).then(function()
+                        {
+                            console.log('deffered PRELOAD sdvig');
+                            sdvig(newimg);
+                        });
+                    }
+                    if (thisindex == ($rowimg.length-1))
+                    {
+                        /* подгружаем картинки в конец */
+                        loadSibImage(nextload,true).done(function()
+                        {
+                            console.log('deffered NEXTLOAD sdvig');
+                            sdvig(newimg);
+                        });
+                    }
+                    console.log('thisindex=',thisindex);
+                    /* подгружаем если первый или последний */
 
 
-                console.log('newimg=',newimg);
-                sdvig(newimg);
+                    console.log('newimg=',newimg);
+                    sdvig(newimg);
 
-                var lightbox =  $('<img/>',{
-                    src: new_data_id.l_link,
-                    class: 'lightbox',
-                    'data-id': new_data_id.id
-                }).appendTo('.main').load(function(){
-                        resizeImage($(this));
-                        $('.spiner').remove();
-                        $(this).animate({opacity:1},300);
-                    });
+                    var lightbox =  $('<img/>',{
+                        src: new_data_id.l_link,
+                        class: 'lightbox',
+                        'data-id': new_data_id.id
+                    }).appendTo('.main').load(function(){
+                            resizeImage($(this));
+                            $('.spiner').remove();
+                            $(this).animate({opacity:1},300);
+                        });
+                });
+
             }
             else
             {

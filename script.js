@@ -311,6 +311,7 @@
         {
             console.log('sdvig propusk');
         }
+        $('.loading').remove();
     }
     /*
     * @param {string} data_id  {nubmer} x

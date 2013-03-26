@@ -450,7 +450,7 @@
                 {
                     rememberScroll = $(this).scrollLeft();
                     $(this).slideUp(400);
-                    alert('slideUp');
+                    /*alert('slideUp'); */
                 }
             });
         $window

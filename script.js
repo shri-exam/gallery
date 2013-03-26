@@ -58,7 +58,25 @@
     /* когда все картинки загружены в массив загружаем первую партию превьюх */
     loadImages.done(function(){
             blockLoadImages = false;
-            loadSibImage(beginId,true);
+        if (localStorage['image']) {
+            loadSibImage(imgId[searchIndex(localStorage['image'])-1].id,true).done(function(){
+                loadSibImage(localStorage['image'],false).done(function(){
+                    showLightBoxById(localStorage['image']);
+                    sdvig($('.row img').filter('[data-id='+localStorage['image']+']'));
+                    $gallery = $('.gallery');
+                    console.log(' === gallery.SCrollLeft=',$gallery.scrollLeft(),
+                        ' windows.width()/2=',$(window).width()/2,
+                        ' NEW sdvinut = ',$gallery.scrollLeft()+$(window).width()/2
+                    );
+                    $gallery.animate({
+                        scrollLeft:$gallery.scrollLeft()+$(window).width()/4
+                    },300);
+                    /*rememberScroll = $gallery.scrollLeft(); */
+                });
+            });
+            /*loadSibImage(localStorage['image'],false);   */
+        }
+
     });
     /*
     * @param {jQuery} img
@@ -269,6 +287,7 @@
         console.log('sdvig  img=',img);
         if (img.length)
         {
+
             var offsetLeft = $(img).offset().left;
             console.log('sdvig offsetLeft=',offsetLeft);
             var $gallery = $('.gallery');
@@ -341,6 +360,9 @@
                             $('.spiner').remove();
                             $(this).animate({opacity:1},300);
                         });
+                    console.log('************ old localstorage image =',localStorage['image']) ;
+                    localStorage['image'] = new_data_id.id;
+                    console.log('************ new localstorage image =',localStorage['image']) ;
 
                 });
 
@@ -443,6 +465,7 @@
         });
         $('.hovergallery').hover(function(){
             $('.gallery').scrollLeft(rememberScroll).slideDown(400);
+            sdvig($('.row img').filter('.current').eq(0));
         });
         $('body').bind('touchmove',function(){
             /* меняем интерфейс на тачкриновский */
@@ -475,5 +498,6 @@
             console.log('click krug_next');
             showLightBoxById($('.lightbox').attr('data-id'),1)
         });
+
     });
 }());

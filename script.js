@@ -446,7 +446,12 @@
             function(){
                 hovergallery=false;
 
-                if (touch_e === 0){rememberScroll = $(this).scrollLeft();$(this).slideUp(400);}
+                if (touch_e === 0)
+                {
+                    rememberScroll = $(this).scrollLeft();
+                    $(this).slideUp(400);
+                    alert('slideUp');
+                }
             });
         $window
             .bind('scrollOn',function(){

@@ -6,17 +6,13 @@
     var images = []; /* Массив для картинок */
     var imgId = []; /* массив Объектов  где хранятся только id картинок */
     var next = 1; /* адрес следующей страницы пагинации */
-    /*delete localStorage['image'];  */
-    var rememberScroll=0;
-    var hovergallery = false;
-    var loadImages = $.Deferred();
-    var blockLoadImages = false;
-    var preload=Number(localStorage['image']),nextload = true;
-    var step=1; if (/firefox/i.test(navigator.userAgent))  {step=3;}
+    var hovergallery = false; /* прокрутка только над галереей */
+    var loadImages = $.Deferred(); /* ждем пока загрузятся в массив все изоб-я альбома */
+    var blockLoadImages = false; /* блок загрузок пока не завершились предыдущие */
+    var preload=Number(localStorage['image']),nextload = true; /* сохраненная прошлая картинки */
+    var step=1; if (/firefox/i.test(navigator.userAgent))  {step=3;} /* приумноженная горизональная прокрутка для мозилы*/
 
-    var loading = $('<td/>',{
-        class: 'loading'
-    });
+    var loading = $('<td/>',{class: 'loading'});
     var spiner = $('<div/>',{ class: 'spiner'});
 
     function getAllAlbumImages()
@@ -62,11 +58,11 @@
             loadSibImage(imgId[searchIndex(localStorage['image'])-1].id,true).done(function(){
                 loadSibImage(localStorage['image'],false).done(function(){
                     showLightBoxById(localStorage['image']);
-                    $gallery = $('.gallery');
-                    console.log(' === gallery.SCrollLeft=',$gallery.scrollLeft(),
+                    /*$gallery = $('.gallery'); */
+                    /*console.log(' === gallery.SCrollLeft=',$gallery.scrollLeft(),
                         ' windows.width()/2=',$(window).width()/2,
                         ' NEW sdvinut = ',$gallery.scrollLeft()+$(window).width()/2
-                    );
+                    );                                                               */
                 });
             });
             /*loadSibImage(localStorage['image'],false);   */
@@ -211,6 +207,7 @@
                                     }
                                 }
                                 $gallery.trigger('btn-replace');
+                                /*$('.empty').trigger('change-width'); */
                                 /* привязываем обработчики обратно */
                                 blockLoadImages = false;
                                 loadSibImage_dfd.resolve();
@@ -298,26 +295,25 @@
     }
     function sdvig(img)
     {
-        console.log(' RABOTAET sdvig  img=',img);
+        /*console.log(' RABOTAET sdvig  img=',img); */
         if (img.length)
         {
 
             var offsetLeft = $(img).offset().left;
-            console.log('sdvig offsetLeft=',offsetLeft);
+            /*console.log('sdvig offsetLeft=',offsetLeft); */
             var $gallery = $('.gallery');
-            var z = $gallery.scrollLeft()-($(window).width()/2-$(img).width()/2-offsetLeft);
-            console.log(
+            var z =$gallery.scrollLeft()-($(window).width()/2-$(img).width()/2-offsetLeft);
+            /*console.log(
                 'galleryLeft=',$gallery.scrollLeft()
                 ,' windowsW/2=',$(window).width()/2
                 ,' z=',z
-            );
+            );*/
             $gallery.animate({ scrollLeft: z}, 500);
-            console.log('SSSSSSSSSSSSSSSSSS Scrolim LEFT');
-            rememberScroll = z;
+            /*console.log('SSSSSSSSSSSSSSSSSS Scrolim LEFT');  */
         }
         else
         {
-            console.log('sdvig propusk');
+            /*console.log('sdvig propusk'); */
         }
         $('.loading').remove();
     }
@@ -453,37 +449,15 @@
         $gallery = $('.gallery');
         getAllAlbumImages();
         scrolling();
-        /*$('.hovergallery').hover(
-            function(){$gallery.slideDown(400);hovergallery = true;},
-            function(){
-                if (touch_e === 0)
-                {
-                    hovergallery = false;
-                    $gallery.slideUp(400);
-                }
-            }); */
-        $window.mousemove(function(e){
-            /*console.log('********* window.height=',$window.height(),' ','pagey =', e.pageY,' ***********');  */
-            if ($window.height()- e.pageY < 100)
-            {
-                hovergallery = true;
-                $gallery.slideDown(400,function(){
-                    sdvig($('.current'));
-                });
-            }
-            else
-            {
-                if (touch_e === 0)
-                {
-                    hovergallery = false;
-                    $gallery.slideUp(400);
-                }
-                else
-                {
-                    console.log('!!!! touch != 0');
-                }
-            }
+
+        $gallery.hover(function(){
+            hovergallery = true;
+            $gallery_tiles = $('.gallery_tiles');
+            $gallery_tiles.slideDown(400,function(){sdvig($('.current'));});
+        },function(){
+            $gallery_tiles.slideUp(400);
         });
+
 
         $window
             .bind('scrollOn',function(){
@@ -552,6 +526,12 @@
             $(this).animate({opacity:1},300);
         },function(){
             $(this).animate({opacity:0.5},300);
+        });
+
+
+        $('.empty').bind('change-width',function(){
+            console.log('***TRIGGER change-width');
+            $('.empty').width($('.gallery').width());
         });
 
     });

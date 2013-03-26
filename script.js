@@ -46,7 +46,7 @@
         }
         else
         {
-            console.log('al IMAGES LOAD images=',images,' imgId=',imgId);
+            /*console.log('al IMAGES LOAD images=',images,' imgId=',imgId);*/
             loadImages.resolve();
         }
     }
@@ -55,6 +55,11 @@
     loadImages.done(function(){
             blockLoadImages = false;
         if (localStorage['image']) {
+            /*
+            * если до етого был просмотр
+            * загружаем след (включая себя [-1]). и предыдущие
+            * изображения от id который был в localstorage
+            * */
             loadSibImage(imgId[searchIndex(localStorage['image'])-1].id,true).done(function(){
                 loadSibImage(localStorage['image'],false).done(function(){
                     showLightBoxById(localStorage['image']);
@@ -69,6 +74,12 @@
         }
         else
         {
+            /*
+            * Если это первый вход загружаем
+            * первую партию и выводим на экран первое
+            * изображение
+            *
+            * */
             preload =  imgId[0].id;
             loadSibImage(preload,true,-1).done(function(){
                 showLightBoxById(imgId[0].id,0);
@@ -84,27 +95,31 @@
         var dataImg = images[$(img).attr('data-id')];
         if (!dataImg) { return false;}
         $window = $(window);
-        /*console.log($(img).attr('data-id'));
-        console.log(dataImg);  */
-        /*alert('touch_e='+touch_e);  */
+        /*
+        * Требуемая высота и ширина
+        * если тачскрин - то высота меньше на touch_e
+        * */
         var reqheight = ($window.height()-(20+touch_e));
         var reqwidth = $window.width()-20;
-       /*alert('reqh='+reqheight);*/
-        console.log('reqH=',reqheight,' reqW=',reqwidth);
-
-
+        /*console.log('reqH=',reqheight,' reqW=',reqwidth);*/
         if (dataImg.height<reqheight && dataImg.width<reqwidth)
         {
+            /*
+            *  Если оригинал меньше - выводим как есть
+            * */
             $(img).height(dataImg.height);
             $(img).width(dataImg.width);
         }
         else
         {
-            /*alert('delaem resize'); */
             var tempHeight = $(img).height();
-            console.log('tempHeight=',tempHeight);
             var tempWidth = $(img).width();
-            console.log('tempWidth=',tempWidth);
+
+            /*
+            * Высчитываем новые пропорции исходя из новой
+            * ширины или высоты
+            * п.с. Для планшетов - не масштабирует авто-и.
+            * */
             if (reqheight<reqwidth)
             {
                 $(img).height(reqheight);
@@ -112,7 +127,6 @@
             }
             else
             {
-                console.log('OPA');
                 $(img).width(reqwidth);
                 $(img).height(tempHeight*reqwidth/tempWidth);
             }
@@ -124,7 +138,7 @@
     }
     /*
     * @param {number}
-    *
+    * @return {number}
     * */
     function searchIndex(id)
     {
@@ -135,7 +149,7 @@
         return false;
     }
     /*
-    * @param {string} id, {boolean} next
+    * @param {string} id, {boolean} next, {number} yyy
     *
     */
     function loadSibImage(id,next,yyy)
@@ -150,39 +164,32 @@
                 var $row = $('.row');
                 if (next){ $row.append(loading);console.log('ADD END');}
                 else { $row.prepend(loading);console.log('ADD BEGIN');}
-
-                console.log('id=',id); console.log('next=',next);
-
-                var indexImg = false; indexImg = searchIndex(id);
-
-                console.log('indexImg=',indexImg);
+                var indexImg = searchIndex(id);
                 indexImg = Number(indexImg)+yyy;
-                var count = Math.ceil($(window).width()/130);
-
+                var count = Math.ceil($(window).width()/130);/* сколько плиток нужно подгрузить */
+                var $gallery = $('.gallery');
                 for (var i=1;i<count;i++)
                 {
                     var newIndexImg = false;
                     if (next)
                     {
-                        if (nextload == false) {console.log('nextload=false error: 1');return false;}
+                        if (nextload == false) {blockLoadImages = false;/*console.log('nextload=false error: 1');*/return false;}
                         else {newIndexImg = indexImg+i;}
                     }
                     else
                     {
                         if (preload == false)
                         {
-                            console.log('preload=false error: 2');
-                            /*return false;*/
-                            loadSibImage_dfd.promise();
+                            /*console.log('preload=false error: 2');  */
+                            blockLoadImages = false;
+                            return false;
                         }
                         else {newIndexImg = indexImg-i;}
                     }
-
-                    /*console.log('newIndexImg=',newIndexImg);     */
+                    /*console.log('newIndexImg=',newIndexImg);*/
                     if (imgId[newIndexImg])
                     {
-                        console.log('loaded = ',newIndexImg,' ',images[imgId[newIndexImg].id]);
-
+                        /*console.log('loaded = ',newIndexImg,' ',images[imgId[newIndexImg].id]); */
                         if (imgId[newIndexImg].load == false)
                         {
                             imgId[newIndexImg].load = true;
@@ -190,12 +197,8 @@
                             if (next) {nextload = imgId[newIndexImg].id;}
                             else {preload = imgId[newIndexImg].id;}
 
-                            var insertImg = loadTiles(images[imgId[newIndexImg].id]);
+                            var ins = loadTiles(images[imgId[newIndexImg].id]);
 
-                            /* было insertImg.then(function(ins)
-                            { */
-                            var ins=insertImg;
-                            var $gallery = $('.gallery');
                                 var insertTd = $('<td/>').append(ins);
                                 if (next) {$(insertTd).appendTo('.row').find('img').animate({opacity:1},300);}
                                 else
@@ -206,25 +209,17 @@
                                         $gallery.scrollLeft(count*100);
                                     }
                                 }
-                                $gallery.trigger('btn-replace');
-                                /*$('.empty').trigger('change-width'); */
-                                /* привязываем обработчики обратно */
-                                blockLoadImages = false;
-                                loadSibImage_dfd.resolve();
-
-
-                            /* было });*/
-
                         }
                         else
                         {
-                            /* такого элемента не существует */
-                            console.log(' already loaded = ',imgId[newIndexImg]);
+                            /* такого элемента не существует или уже загружен */
+                            /*console.log(' already loaded = ',imgId[newIndexImg]);  */
                         }
                     }
                     else
                     {
                         /* элемента не существует */
+                        $gallery.trigger('btn-replace');
                         if (next) {nextload = false;} else {preload = false;}
                         console.log('newIndexImg=',newIndexImg,' error: 3');
                         blockLoadImages = false;
@@ -232,9 +227,12 @@
                 }
                 /* возвращаем промис когда все картинки загружены */
                 $('.loading').remove();
+                blockLoadImages = false;
+                loadSibImage_dfd.resolve();
                 return loadSibImage_dfd.promise();
             }
             else {console.log('id=',id,' error: 5');blockLoadImages = false;}
+
         }  else {console.log('blockLoadImages = ',blockLoadImages,' error: 6');}
     }
     /*
@@ -245,18 +243,20 @@
     * */
     function loadTiles(img)
     {
-        var lT = $.Deferred();
+        /*var lT = $.Deferred();  */
         var imageTiles = $('<img/>',{
             class: 'tiles',
             src: img.s_link,
             'data-id': img.id
         });
-        $(imageTiles).load(function(){ lT.resolve($(imageTiles)); });
+        /*$(imageTiles).load(function(){ lT.resolve($(imageTiles)); });*/
         /* было return lT.promise();   */
         /* надо ли дожидатся ?*/
+        console.log('*** loadTiles =',img.id);
         return $(imageTiles);
     }
-    function loadScroll(obj)
+
+    function loadScroll(obj)     /* функция горизонтального скрола */
     {
         $window = $(window);
         if (hovergallery)
@@ -264,8 +264,6 @@
             var windowscrolltop = $(window).scrollTop();
             var galleryscrollleft = $('.gallery').scrollLeft();
 
-
-            /* КОСЯК */
             if (windowscrolltop<100 ) {$('.gallery').scrollLeft(galleryscrollleft-(100-windowscrolltop*step));}
             else {$('.gallery').scrollLeft(galleryscrollleft+(windowscrolltop*step-100));}
 
@@ -280,12 +278,12 @@
             {
                 $window.trigger('scroll-prep');
             }
-            else {console.log('gallery.scrollLeft=',$gallery.scrollLeft(),
+            /*else {console.log('gallery.scrollLeft=',$gallery.scrollLeft(),
                 ' table.width=',$table.width(),
-                ' gallery.width=',$gallery.width());}
+                ' gallery.width=',$gallery.width());}  */
         }
     }
-    /* функция горизонтального скрола */
+
     function scrolling()
     {
         $(window)
@@ -295,25 +293,13 @@
     }
     function sdvig(img)
     {
-        /*console.log(' RABOTAET sdvig  img=',img); */
         if (img.length)
         {
 
             var offsetLeft = $(img).offset().left;
-            /*console.log('sdvig offsetLeft=',offsetLeft); */
             var $gallery = $('.gallery');
             var z =$gallery.scrollLeft()-($(window).width()/2-$(img).width()/2-offsetLeft);
-            /*console.log(
-                'galleryLeft=',$gallery.scrollLeft()
-                ,' windowsW/2=',$(window).width()/2
-                ,' z=',z
-            );*/
             $gallery.animate({ scrollLeft: z}, 500);
-            /*console.log('SSSSSSSSSSSSSSSSSS Scrolim LEFT');  */
-        }
-        else
-        {
-            /*console.log('sdvig propusk'); */
         }
         $('.loading').remove();
     }
@@ -442,6 +428,14 @@
             $('.spiner').remove();
         }
     }
+
+
+
+
+
+
+
+
     /* после загрузки страницы */
     $(function(){
         /*Скачивание всех картинок в массив */

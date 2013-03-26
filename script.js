@@ -6,12 +6,13 @@
     var images = []; /* Массив для картинок */
     var imgId = []; /* массив Объектов  где хранятся только id картинок */
     var next = 1; /* адрес следующей страницы пагинации */
+    delete localStorage['image'];
     var rememberScroll=0;
     var hovergallery = false;
     var beginId = "175189";
     var loadImages = $.Deferred();
     var blockLoadImages = false;
-    var preload=Number(beginId),nextload = true;
+    var preload=Number(localStorage['image']),nextload = true;
     var step=1; if (/firefox/i.test(navigator.userAgent))  {alert('fire');step=3;}
 
     var loading = $('<td/>',{
@@ -62,19 +63,21 @@
             loadSibImage(imgId[searchIndex(localStorage['image'])-1].id,true).done(function(){
                 loadSibImage(localStorage['image'],false).done(function(){
                     showLightBoxById(localStorage['image']);
-                    sdvig($('.row img').filter('[data-id='+localStorage['image']+']'));
                     $gallery = $('.gallery');
                     console.log(' === gallery.SCrollLeft=',$gallery.scrollLeft(),
                         ' windows.width()/2=',$(window).width()/2,
                         ' NEW sdvinut = ',$gallery.scrollLeft()+$(window).width()/2
                     );
-                    $gallery.animate({
-                        scrollLeft:$gallery.scrollLeft()+$(window).width()/4
-                    },300);
-                    /*rememberScroll = $gallery.scrollLeft(); */
                 });
             });
             /*loadSibImage(localStorage['image'],false);   */
+        }
+        else
+        {
+            preload =  imgId[0].id;
+            loadSibImage(preload,true,-1).done(function(){
+                showLightBoxById(imgId[0].id,0);
+            });
         }
 
     });
@@ -140,8 +143,9 @@
     * @param {string} id, {boolean} next
     *
     */
-    function loadSibImage(id,next)
+    function loadSibImage(id,next,yyy)
     {
+        yyy = yyy || 0;
         var loadSibImage_dfd = $.Deferred();
         if (blockLoadImages === false)
         {
@@ -157,7 +161,7 @@
                 var indexImg = false; indexImg = searchIndex(id);
 
                 console.log('indexImg=',indexImg);
-                indexImg = Number(indexImg);
+                indexImg = Number(indexImg)+yyy;
                 var count = Math.ceil($(window).width()/130);
 
                 for (var i=1;i<count;i++)
@@ -188,9 +192,10 @@
 
                             var insertImg = loadTiles(images[imgId[newIndexImg].id]);
 
-                            insertImg.then(function(ins)
-                            {
-                                var $gallery = $('.gallery');
+                            /* было insertImg.then(function(ins)
+                            { */
+                            var ins=insertImg;
+                            var $gallery = $('.gallery');
                                 var insertTd = $('<td/>').append(ins);
                                 if (next) {$(insertTd).appendTo('.row').find('img').animate({opacity:1},300);}
                                 else
@@ -201,14 +206,13 @@
                                         $gallery.scrollLeft(count*100);
                                     }
                                 }
-                                $('.loading').remove();
                                 $gallery.trigger('btn-replace');
                                 /* привязываем обработчики обратно */
                                 blockLoadImages = false;
                                 loadSibImage_dfd.resolve();
 
 
-                            });
+                            /* было });*/
 
                         }
                         else
@@ -226,6 +230,7 @@
                     }
                 }
                 /* возвращаем промис когда все картинки загружены */
+                $('.loading').remove();
                 return loadSibImage_dfd.promise();
             }
             else {console.log('id=',id,' error: 5');blockLoadImages = false;}
@@ -246,7 +251,9 @@
             'data-id': img.id
         });
         $(imageTiles).load(function(){ lT.resolve($(imageTiles)); });
-        return lT.promise();
+        /* было return lT.promise();   */
+        /* надо ли дожидатся ?*/
+        return $(imageTiles);
     }
     function loadScroll(obj)
     {
@@ -349,7 +356,6 @@
                     console.log('thisindex=',thisindex);
                     /* подгружаем если первый или последний */
                     console.log('newimg=',newimg);
-                    sdvig(newimg);
                     var lightbox =  $('<img/>',{
                         src: new_data_id.l_link,
                         class: 'lightbox',
@@ -363,6 +369,7 @@
                     console.log('************ old localstorage image =',localStorage['image']) ;
                     localStorage['image'] = new_data_id.id;
                     console.log('************ new localstorage image =',localStorage['image']) ;
+                    sdvig(newimg);
 
                 });
 

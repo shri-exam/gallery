@@ -104,3 +104,11 @@ table {
     left: 2%;
     background-image: url('krug_prep.png');
 }
+.tiles {
+    min-height: 100px;
+    min-width: 100px;
+    background-color: #fff;
+    background-image: url('loading.gif');
+    background-repeat: no-repeat;
+    background-position: center center;
+}

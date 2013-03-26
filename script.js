@@ -424,7 +424,10 @@
             $gallery_tiles = $('.gallery_tiles');
             $gallery_tiles.slideDown(400,function(){sdvig($('.current'));});
         },function(){
-            $gallery_tiles.slideUp(400);
+            if (touch_e == 0)
+            {
+                $gallery_tiles.slideUp(400);
+            }
         });
 
 

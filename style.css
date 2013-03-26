@@ -16,14 +16,32 @@ body::-webkit-scrollbar,html::-webkit-scrollbar {display: none;}
 .gallery {
     height:120px;
     min-height: 120px;
-    border: 2px solid red;
     width: 99%;
     overflow-y: hidden;
     overflow-x: scroll;
     position: absolute;
     bottom: 0;
     z-index: 99;
+
+}
+.gallery_tiles {
+    position: absolute;
+    bottom: 0;
     background-color: rgba(0,0,0,0.5);
+}
+.empty {
+    min-width: 100%;
+    height: 1px;
+    display: block;
+    opacity: 0;
+}
+.tiles {
+    min-height: 100px;
+    min-width: 100px;
+    background-color: #fff;
+    background-image: url('loading.gif');
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 table {
     border-collapse: collapse;
@@ -72,12 +90,8 @@ table {
     height: 100px;
     cursor: pointer;
 }
-.btn_prep {
-    background-image: url('btn_prep.png');
-}
-.btn_next {
-    background-image: url('btn_next.png');
-}
+.btn_prep {background-image: url('btn_prep.png');}
+.btn_next { background-image: url('btn_next.png');}
 .krug {
     position: fixed;
     top: 40%;
@@ -86,32 +100,7 @@ table {
     z-index: 2;
     opacity: 0.5;
     cursor: pointer;
+}
+.krug_next {right: 2%;background-image: url('krug_next.png');}
+.krug_prep {left: 2%; background-image: url('krug_prep.png');}
 
-}
-.krug_next {
-    right: 2%;
-    background-image: url('krug_next.png');
-}
-.krug_prep {
-    left: 2%;
-    background-image: url('krug_prep.png');
-}
-.tiles {
-    min-height: 100px;
-    min-width: 100px;
-    background-color: #fff;
-    background-image: url('loading.gif');
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-.gallery_tiles {
-    position: absolute;
-    bottom: 0;
-}
-.empty {
-    min-width: 100%;
-    height: 1px;
-    border: 1px dotted #fff;
-    display: block;
-
-}

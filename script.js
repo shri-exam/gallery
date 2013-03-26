@@ -321,60 +321,75 @@
 
                 var vlevoOrvpravo = $.Deferred();
                 $lightbox = $('.lightbox');
-                if ($lightbox)
-                {
-                    if (thisindex > oldIndex)
-                    {
-                        console.log('EMED VLEVO');
-                        $lightbox.animate({left:'-200%'},800,function(){vlevoOrvpravo.resolve(); });
-                    }
-                    else
-                    {
-                        console.log('EMED VPRAVO');
-                        $lightbox.animate({left:'200%'},800,function(){vlevoOrvpravo.resolve(); });
-                    }
-                }
-                else
-                {
-                    vlevoOrvpravo.resolve();
-                }
 
-                vlevoOrvpravo.done(function(){
-                    if (thisindex == 0)
-                    {
-                        /* подгружаем картинки в начало */
-                        loadSibImage(preload,false).then(function()
-                        {
-                            console.log('deffered PRELOAD sdvig');
-                            sdvig(newimg);
-                        });
-                    }
-                    if (thisindex == ($rowimg.length-1))
-                    {
-                        /* подгружаем картинки в конец */
-                        loadSibImage(nextload,true).done(function()
-                        {
-                            console.log('deffered NEXTLOAD sdvig');
-                            sdvig(newimg);
-                        });
-                    }
+                var lll = $.Deferred();
+                lll.done(function()
+                {
+                    console.log('lll DEFERRED',' $lightbox=',$lightbox
+                    ,' newimg=', newimg);
                     console.log('thisindex=',thisindex);
                     /* подгружаем если первый или последний */
-
-
                     console.log('newimg=',newimg);
                     sdvig(newimg);
-
                     var lightbox =  $('<img/>',{
                         src: new_data_id.l_link,
                         class: 'lightbox',
                         'data-id': new_data_id.id
                     }).appendTo('.main').load(function(){
+                            $lightbox.remove();
                             resizeImage($(this));
                             $('.spiner').remove();
                             $(this).animate({opacity:1},300);
                         });
+
                 });
+
+                if (thisindex > oldIndex)
+                {
+                    console.log('EDEM VLEVO');
+                    console.log('EDEM VLEVO $lightbox=',$lightbox);
+                    if ($lightbox.length)
+                    {
+                        $lightbox.animate({left:'-200%'},800,function()
+                        {
+                            lll.resolve();
+                        });
+                    }
+                    else {lll.resolve();}
+                }
+                else
+                {
+                    console.log('EDEM VPRAVO');
+                    console.log('EDEM VPRAVO $lightbox=',$lightbox);
+                    if ($lightbox.length)
+                    {
+                        $lightbox.animate({left:'200%'},800,function(){
+                            lll.resolve();
+                        });
+                    }
+                    else {lll.resolve();}
+                }
+
+
+
+                if (thisindex == 0)
+                {
+                    /* подгружаем картинки в начало */
+                    loadSibImage(preload,false).then(function()
+                    {
+                        console.log('deffered PRELOAD sdvig');
+                        sdvig(newimg);
+                    });
+                }
+                if (thisindex == ($rowimg.length-1))
+                {
+                    /* подгружаем картинки в конец */
+                    loadSibImage(nextload,true).done(function()
+                    {
+                        console.log('deffered NEXTLOAD sdvig');
+                        sdvig(newimg);
+                    });
+                }
 
             }
             else

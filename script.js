@@ -174,7 +174,12 @@
                     }
                     else
                     {
-                        if (preload == false) {console.log('preload=false error: 2');return false;}
+                        if (preload == false)
+                        {
+                            console.log('preload=false error: 2');
+                            /*return false;*/
+                            loadSibImage_dfd.promise();
+                        }
                         else {newIndexImg = indexImg-i;}
                     }
 
@@ -510,6 +515,12 @@
         {
             console.log('click krug_next');
             showLightBoxById($('.lightbox').attr('data-id'),1)
+        });
+        $('.krug').hover(function()
+        {
+            $(this).animate({opacity:1},300);
+        },function(){
+            $(this).animate({opacity:0.5},300);
         });
 
     });

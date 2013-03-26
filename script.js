@@ -50,9 +50,12 @@
         }
         else
         {
+            console.log('al IMAGES LOAD images=',images,' imgId=',imgId);
             loadImages.resolve();
         }
     }
+
+    /* когда все картинки загружены в массив загружаем первую партию превьюх */
     loadImages.done(function(){
             blockLoadImages = false;
             loadSibImage(beginId,true);
@@ -133,12 +136,12 @@
 
                 console.log('id=',id); console.log('next=',next);
 
-                var indexImg = false;
-                indexImg = searchIndex(id);
+                var indexImg = false; indexImg = searchIndex(id);
 
                 console.log('indexImg=',indexImg);
                 indexImg = Number(indexImg);
                 var count = Math.ceil($(window).width()/130);
+
                 for (var i=1;i<count;i++)
                 {
                     var newIndexImg = false;
@@ -188,7 +191,7 @@
 
 
                             });
-                            return loadSibImage_dfd.promise();
+
                         }
                         else
                         {
@@ -204,6 +207,8 @@
                         blockLoadImages = false;
                     }
                 }
+                /* возвращаем промис когда все картинки загружены */
+                return loadSibImage_dfd.promise();
             }
             else {console.log('id=',id,' error: 5');blockLoadImages = false;}
         }  else {console.log('blockLoadImages = ',blockLoadImages,' error: 6');}

@@ -6,7 +6,7 @@
     var images = []; /* Массив для картинок */
     var imgId = []; /* массив Объектов  где хранятся только id картинок */
     var next = 1; /* адрес следующей страницы пагинации */
-    delete localStorage['image'];
+    /*delete localStorage['image'];  */
     var rememberScroll=0;
     var hovergallery = false;
     var beginId = "175189";

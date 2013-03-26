@@ -223,6 +223,8 @@
                         if (next) {nextload = false;} else {preload = false;}
                         console.log('newIndexImg=',newIndexImg,' error: 3');
                         blockLoadImages = false;
+                        loadSibImage_dfd.resolve();
+                        return loadSibImage_dfd.promise();
                     }
                 }
                 /* возвращаем промис когда все картинки загружены */
@@ -322,33 +324,22 @@
             console.log('newIndex=',newIndex);
             if (imgId[newIndex])
             {
-
                 var oldIndex = $rowimg.index($rowimg.filter('.current').eq(0));
-                console.log(' ======= oldIndex=',oldIndex);
-
                 $(spiner).prependTo('.main')
                 .css({
                     top: ($window.height()-(200+touch_e))/2,
                     left: ($window.width()-200)/2
                 });
                 var new_data_id = images[imgId[newIndex].id];
-                console.log('new_data_id = ',new_data_id);
-
+                /*console.log('new_data_id = ',new_data_id);*/
                 var newimg = $rowimg.removeClass('current').
                     filter('[data-id='+new_data_id.id+']').eq(0).addClass('current');
                 var thisindex = $rowimg.index(newimg);
-
-                var vlevoOrvpravo = $.Deferred();
                 $lightbox = $('.lightbox');
-
                 var lll = $.Deferred();
                 lll.done(function()
                 {
-                    console.log('lll DEFERRED',' $lightbox=',$lightbox
-                    ,' newimg=', newimg);
-                    console.log('thisindex=',thisindex);
                     /* подгружаем если первый или последний */
-                    console.log('newimg=',newimg);
                     var lightbox =  $('<img/>',{
                         src: new_data_id.l_link,
                         class: 'lightbox',
@@ -359,49 +350,36 @@
                             $('.spiner').remove();
                             $(this).animate({opacity:1},300);
                         });
-                    console.log('************ old localstorage image =',localStorage['image']) ;
                     localStorage['image'] = new_data_id.id;
-                    console.log('************ new localstorage image =',localStorage['image']) ;
-                    /*sdvig(newimg);*/
-                    console.log('MONITOR newimg=',newimg);
                     sdvig(newimg);
 
                 });
 
                 if (thisindex > oldIndex)
                 {
-                    console.log('EDEM VLEVO');
-                    console.log('EDEM VLEVO $lightbox=',$lightbox);
                     if ($lightbox.length)
                     {
                         $lightbox.animate({left:'-200%'},800,function()
                         {
                             lll.resolve();
                         });
-                    }
-                    else {lll.resolve();}
+                    } else {lll.resolve();}
                 }
                 else
                 {
-                    console.log('EDEM VPRAVO');
-                    console.log('EDEM VPRAVO $lightbox=',$lightbox);
                     if ($lightbox.length)
                     {
                         $lightbox.animate({left:'200%'},800,function(){
                             lll.resolve();
                         });
-                    }
-                    else {lll.resolve();}
+                    } else {lll.resolve();}
                 }
-
-
 
                 if (thisindex == 0)
                 {
                     /* подгружаем картинки в начало */
                     loadSibImage(preload,false).then(function()
                     {
-                        console.log('deffered PRELOAD sdvig');
                         sdvig(newimg);
                     });
                 }
@@ -410,7 +388,6 @@
                     /* подгружаем картинки в конец */
                     loadSibImage(nextload,true).done(function()
                     {
-                        console.log('deffered NEXTLOAD sdvig');
                         sdvig(newimg);
                     });
                 }
@@ -418,13 +395,11 @@
             }
             else
             {
-                console.log('elementa imgId s indexom=',newIndex,' netu :-(');
                 $('.spiner').remove();
             }
         }
         else
         {
-            console.log('nepravilnuy data-id=',data_id);
             $('.spiner').remove();
         }
     }
@@ -455,12 +430,11 @@
 
         $window
             .bind('scrollOn',function(){
-                console.log('ScrollOn = WINDOWS SCROLLING');
                 loadScroll();
                 $(window).scrollTop(100);
             })
-            .bind('scroll-next',function(){console.log('loadiing NEXT');loadSibImage(nextload,true);})
-            .bind('scroll-prep',function(){console.log('loadiing PREP');loadSibImage(preload,false);})
+            .bind('scroll-next',function(){/*console.log('loadiing NEXT');*/loadSibImage(nextload,true);})
+            .bind('scroll-prep',function(){/*console.log('loadiing PREP');*/loadSibImage(preload,false);})
             .resize(function(){resizeImage($('.lightbox').eq(0));});
 
         $('.row').delegate('td img','click',function(){
@@ -476,7 +450,6 @@
             $('.lightbox').remove();$('.gallery').trigger('btn-replace');
         });
 
-
         $('body')
         .bind('touchmove',function(){
             /* меняем интерфейс на тачкриновский */
@@ -491,7 +464,8 @@
                 $('.krug').animate({opacity:0.5},300);
                 },function(){
                 $('.krug').animate({opacity:0},300);
-                });
+                })
+        .delegate('.spiner','click',function(){ $(this).remove();});
 
         /* кнопки загрузок для тачскринов */
         $gallery.bind('btn-replace',function(){
@@ -520,12 +494,6 @@
             $(this).animate({opacity:1},300);
         },function(){
             $(this).animate({opacity:0.5},300);
-        });
-
-
-        $('.empty').bind('change-width',function(){
-            console.log('***TRIGGER change-width');
-            $('.empty').width($('.gallery').width());
         });
 
     });

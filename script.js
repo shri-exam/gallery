@@ -9,7 +9,6 @@
     /*delete localStorage['image'];  */
     var rememberScroll=0;
     var hovergallery = false;
-    var beginId = "175189";
     var loadImages = $.Deferred();
     var blockLoadImages = false;
     var preload=Number(localStorage['image']),nextload = true;
@@ -267,6 +266,9 @@
         {
             var windowscrolltop = $(window).scrollTop();
             var galleryscrollleft = $('.gallery').scrollLeft();
+
+
+            /* КОСЯК */
             if (windowscrolltop<100 ) {$('.gallery').scrollLeft(galleryscrollleft-(100-windowscrolltop*step));}
             else {$('.gallery').scrollLeft(galleryscrollleft+(windowscrolltop*step-100));}
 
@@ -296,7 +298,7 @@
     }
     function sdvig(img)
     {
-        console.log('sdvig  img=',img);
+        console.log(' RABOTAET sdvig  img=',img);
         if (img.length)
         {
 
@@ -310,6 +312,7 @@
                 ,' z=',z
             );
             $gallery.animate({ scrollLeft: z}, 500);
+            console.log('SSSSSSSSSSSSSSSSSS Scrolim LEFT');
             rememberScroll = z;
         }
         else
@@ -324,6 +327,8 @@
     * */
     function showLightBoxById (data_id,x)
     {
+        var $rowimg = $('.row img');
+        data_id = data_id || $rowimg.filter('.current').attr('data-id');
         if (data_id)
         {
             x = x || 0;
@@ -335,7 +340,7 @@
             console.log('newIndex=',newIndex);
             if (imgId[newIndex])
             {
-                var $rowimg = $('.row img');
+
                 var oldIndex = $rowimg.index($rowimg.filter('.current').eq(0));
                 console.log(' ======= oldIndex=',oldIndex);
 
@@ -375,6 +380,8 @@
                     console.log('************ old localstorage image =',localStorage['image']) ;
                     localStorage['image'] = new_data_id.id;
                     console.log('************ new localstorage image =',localStorage['image']) ;
+                    /*sdvig(newimg);*/
+                    console.log('MONITOR newimg=',newimg);
                     sdvig(newimg);
 
                 });
@@ -446,19 +453,38 @@
         $gallery = $('.gallery');
         getAllAlbumImages();
         scrolling();
-        $gallery.hover(function(){
-                hovergallery=true;
-            },
+        /*$('.hovergallery').hover(
+            function(){$gallery.slideDown(400);hovergallery = true;},
             function(){
-                hovergallery=false;
-
                 if (touch_e === 0)
                 {
-                    rememberScroll = $(this).scrollLeft();
-                    $(this).slideUp(400);
-                    /*alert('slideUp'); */
+                    hovergallery = false;
+                    $gallery.slideUp(400);
                 }
-            });
+            }); */
+        $window.mousemove(function(e){
+            /*console.log('********* window.height=',$window.height(),' ','pagey =', e.pageY,' ***********');  */
+            if ($window.height()- e.pageY < 100)
+            {
+                hovergallery = true;
+                $gallery.slideDown(400,function(){
+                    sdvig($('.current'));
+                });
+            }
+            else
+            {
+                if (touch_e === 0)
+                {
+                    hovergallery = false;
+                    $gallery.slideUp(400);
+                }
+                else
+                {
+                    console.log('!!!! touch != 0');
+                }
+            }
+        });
+
         $window
             .bind('scrollOn',function(){
                 console.log('ScrollOn = WINDOWS SCROLLING');
@@ -481,24 +507,25 @@
         $('.main').delegate('.lightbox','click',function(){
             $('.lightbox').remove();$('.gallery').trigger('btn-replace');
         });
-        $('.hovergallery').hover(function(){
-            $('.gallery').scrollLeft(rememberScroll).slideDown(400);
-            sdvig($('.row img').filter('.current').eq(0));
-        });
-        $('body').bind('touchmove',function(){
+
+
+        $('body')
+        .bind('touchmove',function(){
             /* меняем интерфейс на тачкриновский */
-            /* отсвязываем события прокрутки */
+            /* отвязываем события прокрутки */
             var $gallery =  $('.gallery');
-            touch_e = $gallery.height()+30;
+            touch_e = $gallery.height()+30; /* чтоб картинкоа не заходила на галерею */
             $gallery.trigger('btn-replace');
-            hovergallery=true;
+            hovergallery=true; /* больше не прячем галерею */
             $window.unbind('scroll-next').unbind('scroll-prep').unbind('scrollOn');
-            $('.hovergallery').remove();
-        }).hover(function(){
+            })
+        .hover(function(){
                 $('.krug').animate({opacity:0.5},300);
-            },function(){
+                },function(){
                 $('.krug').animate({opacity:0},300);
-            });
+                });
+
+        /* кнопки загрузок для тачскринов */
         $gallery.bind('btn-replace',function(){
             if (touch_e > 0)
             {
@@ -506,6 +533,8 @@
                 $('.row').prepend('<td class="btn btn_prep"></td>').append('<td class="btn btn_next"></td>');
             }
         });
+
+        /* переключение картинок по клику */
         $('.krug_prep').click(function()
         {
             console.log('click krug_prep');
@@ -516,6 +545,8 @@
             console.log('click krug_next');
             showLightBoxById($('.lightbox').attr('data-id'),1)
         });
+
+        /* прозрачность над кнопками навигации */
         $('.krug').hover(function()
         {
             $(this).animate({opacity:1},300);

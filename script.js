@@ -264,7 +264,7 @@
             var z =$gallery.scrollLeft()-($(window).width()/2-$(img).width()/2-offsetLeft);
             $gallery.animate({ scrollLeft: z}, 500);
         }
-        $gallery.trigger('remove-loading');
+        $gallery.trigger('remove-loading').trigger('btn-replace');
     }
     /*
     * @param {string} data_id  {nubmer} x

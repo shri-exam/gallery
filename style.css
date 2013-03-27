@@ -61,9 +61,10 @@ table {
     background-image: url('loading.gif');
     background-repeat: no-repeat;
     background-position: center center;
-    width: 100px;
-    height: 100px;
+    min-width: 100px;
+    min-height: 100px;
     opacity: 0.3;
+    display: inline-block;
 }
 .lightbox {
     opacity: 0;

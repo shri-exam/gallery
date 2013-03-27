@@ -48,7 +48,7 @@
     }
     /* когда все картинки загружены в массив загружаем первую партию превьюх */
     loadImages.done(function(){
-            blockLoadImages = false;
+            blockLoadImages = false;delete imgId[imgId.length-1];
         if (localStorage['image']) {
             /*
             * если до етого был просмотр
@@ -161,7 +161,7 @@
                     var newIndexImg = false;
                     if (next)
                     {
-                        if (nextload == false) {blockLoadImages = false;/*console.log('nextload=false error: 1');*/return false;}
+                        if (nextload == false) {$gallery.trigger('remove-loading');blockLoadImages = false;/*console.log('nextload=false error: 1');*/return false;}
                         else {newIndexImg = indexImg+i;}
                     }
                     else
@@ -169,6 +169,7 @@
                         if (preload == false)
                         {
                             /*console.log('preload=false error: 2');  */
+                            $gallery.trigger('remove-loading')
                             blockLoadImages = false;
                             return false;
                         } else {newIndexImg = indexImg-i;}
@@ -210,7 +211,11 @@
                 loadSibImage_dfd.resolve();
                 return loadSibImage_dfd.promise();
             }
-            else {console.log('id=',id,' error: 5');blockLoadImages = false;$('.gallery').trigger('remove-loading');}
+            else {
+                console.log('id=',id,' error: 5');
+                blockLoadImages = false;
+                $('.gallery').trigger('remove-loading');
+            }
 
         }  else {console.log('blockLoadImages = ',blockLoadImages,' error: 6');}
     }

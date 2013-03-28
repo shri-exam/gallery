@@ -369,8 +369,12 @@
         $gallery.hover(function(){
             hovergallery = true;
             $gallery_tiles = $('.gallery_tiles');
-            $gallery_tiles.slideDown(400,function(){sdvig($('.current'));});},
-            function(){if (touch_e == 0){$gallery_tiles.slideUp(400);}})
+            /*$gallery_tiles.slideDown(400,function(){sdvig($('.current'));});},*/
+            $gallery_tiles.animate({bottom:'0px'},400);},
+            function(){if (touch_e == 0){
+                /*$gallery_tiles.slideUp(400);*/
+                $gallery_tiles.animate({bottom:'-200px'},400);
+            }})
             .bind('remove-loading',function(){$('.loading').remove();});
         $window
             .bind('scrollOn',function(){
